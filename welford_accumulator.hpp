@@ -38,7 +38,7 @@ namespace algebraic_accumulators
     };
 
     template <typename T>
-    using kbn_welford_accumulate = welford_accumulator<kbn_sum<T>>;
+    using kbn_welford_accumulate = welford_accumulator<algebraic_accumulator::kbn_sum<T>>;
 
     template <typename A>
     auto mean(welford_accumulator<A> const & acc)

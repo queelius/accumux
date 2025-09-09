@@ -1,0 +1,409 @@
+        -:    0:Source:/home/spinoza/github/alpha/algebraic_reducers/kbn_sum.hpp
+        -:    1:#pragma once
+        -:    2:
+        -:    3:/**
+        -:    4: * Given a data type X that models SumReduce<T>, X must be a RegularType
+        -:    5: * and a monoid over (X, +, X()) with two homomorphisms to and from the
+        -:    6: * monoid (T, +, T(0)).
+        -:    7: * 
+        -:    8: * To construct the identity value under + : (X,X) -> X, use the default
+        -:    9: * constructor
+        -:   10: *     X::X().
+        -:   11: *
+        -:   12: * To map X to T, apply the conversion operator
+        -:   13: *     operator X::T().
+        -:   14: *
+        -:   15: * To map T to X, apply the value constructor
+        -:   16: *     X::X(T const & t).
+        -:   17: *
+        -:   18: * To be a homomorphism, the following must be true:
+        -:   19: *     X(T(x) + T(y)) = X(T(x)) + X(T(y)).
+        -:   20: *
+        -:   21: * Due to numerical errors, this may only be *approximately* true,
+        -:   22: * especially since X, as a model of SumReduce<T>, will generally have
+        -:   23: * smaller rounding errors on + : X^* -> X than + : T^* -> T.
+        -:   24: * (X will generlally more accurately represent the concept that T itself
+        -:   25: * models over +.)
+        -:   26: * 
+        -:   27: * In the context of kbn_sum<T>,
+        -:   28: *         it only makes sense for T to be a type that approximately models
+        -:   29: *         the concept of some other type, like a floating point type
+        -:   30: *         modeling real numbers.
+        -:   31: *
+        -:   32: * Since the SumReduce<T> concept is normally used to efficiently
+        -:   33: * reduce sequences over +, there is a specially defined procedure to
+        -:   34: * perform this reduction:
+        -:   35: *
+        -:   36: *     template <InputIterator I>
+        -:   37: *     X::reduce(I, I) -> &X.
+        -:   38: *
+        -:   39: * Typically, this reduction has a time complexity of O(n) and a space
+        -:   40: * complexity of O(1), where n is the number of elements being reduced. Some
+        -:   41: * reductions may have higher or even lower complexities.
+        -:   42: * 
+        -:   43: * If the reduction takes the sequence and re-orders them in a way to mitigate
+        -:   44: * accumulation error, then the time complexity may be O(n log n) for sorts
+        -:   45: * based on binary comparisons. If the reduction employs random sampling
+        -:   46: * and I models a random access iterator, then the reduction has a time
+        -:   47: * complexity on the order of the size of the sample, but generally has a
+        -:   48: * greater loss in accuracy than naively summing over T.
+        -:   49: */
+        -:   50:
+        -:   51:#include <algorithm>
+        -:   52:#include <cmath>
+        -:   53:#include "exp/accumulator_exp.hpp"
+        -:   54:
+        -:   55:namespace algebraic_accumulator
+        -:   56:{
+        -:   57:    /**
+        -:   58:     * kbn_sum<T> models the SumReduce<T> concept with space complexity O(1)
+        -:   59:     * and time complexity O(n).
+        -:   60:     *
+        -:   61:     * kbn_sum<T> has the additional following requirements on T:
+        -:   62:     *
+        -:   63:     *     (2) abs : T -> T models an infinity norm.
+        -:   64:     *
+        -:   65:     * We do not really need a vector space, since kbn_sum<T> does not
+        -:   66:     * need scalar multiplication.
+        -:   67:     *
+        -:   68:     * A specialization might be given for kbn_sum<V> where V is a vector space
+        -:   69:     * over T of dimension greater than 2 by modeling + : (V,V) -> V by
+        -:   70:     * doing a kbn_sum<T> over each component separately. However, we
+        -:   71:     * prefer to employ the underlying + : (V,V) -> V operator, which might
+        -:   72:     * be highly optimized.
+        -:   73:     */
+        -:   74:    template <typename T>
+        -:   75:    struct kbn_sum
+        -:   76:    {
+        -:   77:        using value_type = T;
+        -:   78:
+      151:   79:        kbn_sum(T const & x = T(0)) : s(x), c(T(0)) {};
+------------------
+_ZN21algebraic_accumulator7kbn_sumIfEC2ERKf:
+        1:   79:        kbn_sum(T const & x = T(0)) : s(x), c(T(0)) {};
+------------------
+_ZN21algebraic_accumulator7kbn_sumIdEC2ERKd:
+       30:   79:        kbn_sum(T const & x = T(0)) : s(x), c(T(0)) {};
+------------------
+_ZN21algebraic_accumulator7kbn_sumIdEC2ERKd:
+       42:   79:        kbn_sum(T const & x = T(0)) : s(x), c(T(0)) {};
+------------------
+_ZN21algebraic_accumulator7kbn_sumIfEC2ERKf:
+        1:   79:        kbn_sum(T const & x = T(0)) : s(x), c(T(0)) {};
+------------------
+_ZN21algebraic_accumulator7kbn_sumIdEC2ERKd:
+       10:   79:        kbn_sum(T const & x = T(0)) : s(x), c(T(0)) {};
+------------------
+_ZN21algebraic_accumulator7kbn_sumIfEC2ERKf:
+        2:   79:        kbn_sum(T const & x = T(0)) : s(x), c(T(0)) {};
+------------------
+_ZN21algebraic_accumulator7kbn_sumIdEC2ERKd:
+       16:   79:        kbn_sum(T const & x = T(0)) : s(x), c(T(0)) {};
+------------------
+_ZN21algebraic_accumulator7kbn_sumIdEC2ERKd:
+        4:   79:        kbn_sum(T const & x = T(0)) : s(x), c(T(0)) {};
+------------------
+        -:   80:
+        -:   81:        kbn_sum(kbn_sum<T> const &) = default;
+        -:   82:        kbn_sum<T> & operator=(kbn_sum<T> const &) = default;
+        3:   83:        auto & operator=(T const & x) { s = x; return *this; }
+------------------
+_ZN21algebraic_accumulator7kbn_sumIdEaSERKd:
+        1:   83:        auto & operator=(T const & x) { s = x; return *this; }
+------------------
+_ZN21algebraic_accumulator7kbn_sumIdEaSERKd:
+        2:   83:        auto & operator=(T const & x) { s = x; return *this; }
+------------------
+    24491:   84:        operator T() const { return s+c; }
+------------------
+_ZNK21algebraic_accumulator7kbn_sumIfEcvfEv:
+        1:   84:        operator T() const { return s+c; }
+------------------
+_ZNK21algebraic_accumulator7kbn_sumIdEcvdEv:
+       38:   84:        operator T() const { return s+c; }
+------------------
+_ZNK21algebraic_accumulator7kbn_sumIdEcvdEv:
+    24379:   84:        operator T() const { return s+c; }
+------------------
+_ZNK21algebraic_accumulator7kbn_sumIfEcvfEv:
+        1:   84:        operator T() const { return s+c; }
+------------------
+_ZNK21algebraic_accumulator7kbn_sumIdEcvdEv:
+       14:   84:        operator T() const { return s+c; }
+------------------
+_ZNK21algebraic_accumulator7kbn_sumIdEcvdEv:
+       52:   84:        operator T() const { return s+c; }
+------------------
+_ZNK21algebraic_accumulator7kbn_sumIfEcvfEv:
+        2:   84:        operator T() const { return s+c; }
+------------------
+_ZNK21algebraic_accumulator7kbn_sumIdEcvdEv:
+        4:   84:        operator T() const { return s+c; }
+------------------
+        5:   85:        auto eval() const { return s+c; }
+------------------
+_ZNK21algebraic_accumulator7kbn_sumIdE4evalEv:
+        3:   85:        auto eval() const { return s+c; }
+------------------
+_ZNK21algebraic_accumulator7kbn_sumIdE4evalEv:
+        2:   85:        auto eval() const { return s+c; }
+------------------
+        -:   86:
+        5:   87:        auto operator<(T const & rhs) const { return (T)(*this) < rhs; }
+------------------
+_ZNK21algebraic_accumulator7kbn_sumIdEltERKd:
+        2:   87:        auto operator<(T const & rhs) const { return (T)(*this) < rhs; }
+------------------
+_ZNK21algebraic_accumulator7kbn_sumIdEltERKd:
+        3:   87:        auto operator<(T const & rhs) const { return (T)(*this) < rhs; }
+------------------
+        -:   88:
+        4:   89:        auto operator<(kbn_sum<T> const & rhs) const
+        -:   90:        {
+        4:   91:            return (T)(*this) < (T)rhs;
+        -:   92:        }
+------------------
+_ZNK21algebraic_accumulator7kbn_sumIdEltERKS1_:
+        3:   89:        auto operator<(kbn_sum<T> const & rhs) const
+        -:   90:        {
+        3:   91:            return (T)(*this) < (T)rhs;
+        -:   92:        }
+------------------
+_ZNK21algebraic_accumulator7kbn_sumIdEltERKS1_:
+        1:   89:        auto operator<(kbn_sum<T> const & rhs) const
+        -:   90:        {
+        1:   91:            return (T)(*this) < (T)rhs;
+        -:   92:        }
+------------------
+        -:   93:
+        -:   94:        /**
+        -:   95:         * If a value is the result of a total obtained
+        -:   96:         * by 'naively' summing a sequence of k values of type
+        -:   97:         * T, then the numerical error (approximation error)
+        -:   98:         * in worst-case is O(k).
+        -:   99:         *
+        -:  100:         * kbn_sum<T> is designed explicitly to reduce the
+        -:  101:         * numerical error from summation with a type T that
+        -:  102:         * has fewer digits of precision than the type R that it
+        -:  103:         * models. In particular, the approximation error is
+        -:  104:         * independent of k and is bounded by the precision of
+        -:  105:         * T.
+        -:  106:         */
+        3:  107:        auto operator==(kbn_sum<T> const & rhs) const
+        -:  108:        {
+        3:  109:            return (T)(*this) == (T)rhs;
+        -:  110:        }
+------------------
+_ZNK21algebraic_accumulator7kbn_sumIdEeqERKS1_:
+        2:  107:        auto operator==(kbn_sum<T> const & rhs) const
+        -:  108:        {
+        2:  109:            return (T)(*this) == (T)rhs;
+        -:  110:        }
+------------------
+_ZNK21algebraic_accumulator7kbn_sumIdEeqERKS1_:
+        1:  107:        auto operator==(kbn_sum<T> const & rhs) const
+        -:  108:        {
+        1:  109:            return (T)(*this) == (T)rhs;
+        -:  110:        }
+------------------
+        -:  111:
+        4:  112:        auto operator+(kbn_sum<T> const & rhs)
+        -:  113:        {
+        4:  114:            return kbn_sum<T>(*this) += rhs;
+        -:  115:        }
+------------------
+_ZN21algebraic_accumulator7kbn_sumIdEplERKS1_:
+        1:  112:        auto operator+(kbn_sum<T> const & rhs)
+        -:  113:        {
+        1:  114:            return kbn_sum<T>(*this) += rhs;
+        -:  115:        }
+------------------
+_ZN21algebraic_accumulator7kbn_sumIdEplERKS1_:
+        1:  112:        auto operator+(kbn_sum<T> const & rhs)
+        -:  113:        {
+        1:  114:            return kbn_sum<T>(*this) += rhs;
+        -:  115:        }
+------------------
+_ZN21algebraic_accumulator7kbn_sumIdEplERKS1_:
+        2:  112:        auto operator+(kbn_sum<T> const & rhs)
+        -:  113:        {
+        2:  114:            return kbn_sum<T>(*this) += rhs;
+        -:  115:        }
+------------------
+        -:  116:
+        -:  117:        template <typename I>
+        7:  118:        auto & reduce(I begin, I end)
+        -:  119:        {
+    11023:  120:            for (auto i = begin; i != end; ++i)
+    11016:  121:                (*this) += *i;
+        7:  122:            return *this;
+        -:  123:        }
+------------------
+_ZN21algebraic_accumulator7kbn_sumIdE6reduceIPdEERDaT_S5_:
+        1:  118:        auto & reduce(I begin, I end)
+        -:  119:        {
+        5:  120:            for (auto i = begin; i != end; ++i)
+        4:  121:                (*this) += *i;
+        1:  122:            return *this;
+        -:  123:        }
+------------------
+_ZN21algebraic_accumulator7kbn_sumIdE6reduceIN9__gnu_cxx17__normal_iteratorIPdSt6vectorIdSaIdEEEEEERDaT_SB_:
+        6:  118:        auto & reduce(I begin, I end)
+        -:  119:        {
+    11018:  120:            for (auto i = begin; i != end; ++i)
+    11012:  121:                (*this) += *i;
+        6:  122:            return *this;
+        -:  123:        }
+------------------
+        -:  124:
+        6:  125:        auto & operator+=(kbn_sum<T> const & rhs)
+        -:  126:        {
+        6:  127:            (*this) += rhs.s;
+        6:  128:            (*this) += rhs.c;
+        6:  129:            return *this;
+        -:  130:        }
+------------------
+_ZN21algebraic_accumulator7kbn_sumIdEpLERKS1_:
+        3:  125:        auto & operator+=(kbn_sum<T> const & rhs)
+        -:  126:        {
+        3:  127:            (*this) += rhs.s;
+        3:  128:            (*this) += rhs.c;
+        3:  129:            return *this;
+        -:  130:        }
+------------------
+_ZN21algebraic_accumulator7kbn_sumIdEpLERKS1_:
+        1:  125:        auto & operator+=(kbn_sum<T> const & rhs)
+        -:  126:        {
+        1:  127:            (*this) += rhs.s;
+        1:  128:            (*this) += rhs.c;
+        1:  129:            return *this;
+        -:  130:        }
+------------------
+_ZN21algebraic_accumulator7kbn_sumIdEpLERKS1_:
+        2:  125:        auto & operator+=(kbn_sum<T> const & rhs)
+        -:  126:        {
+        2:  127:            (*this) += rhs.s;
+        2:  128:            (*this) += rhs.c;
+        2:  129:            return *this;
+        -:  130:        }
+------------------
+        -:  131:
+    35388:  132:        auto & operator+=(T const & x)
+        -:  133:        {
+    35388:  134:            auto t = s + x;
+    35388:  135:            if (abs(x) < abs(s))
+   33965*:  136:                c += ((s - t) + x);
+        -:  137:            else
+     1423:  138:                c += ((x - t) + s);
+    35388:  139:            s = t;
+    35388:  140:            return *this;
+        -:  141:        }
+------------------
+_ZN21algebraic_accumulator7kbn_sumIfEpLERKf:
+        1:  132:        auto & operator+=(T const & x)
+        -:  133:        {
+        1:  134:            auto t = s + x;
+        1:  135:            if (abs(x) < abs(s))
+    #####:  136:                c += ((s - t) + x);
+        -:  137:            else
+        1:  138:                c += ((x - t) + s);
+        1:  139:            s = t;
+        1:  140:            return *this;
+        -:  141:        }
+------------------
+_ZN21algebraic_accumulator7kbn_sumIdEpLERKd:
+    11034:  132:        auto & operator+=(T const & x)
+        -:  133:        {
+    11034:  134:            auto t = s + x;
+    11034:  135:            if (abs(x) < abs(s))
+    10955:  136:                c += ((s - t) + x);
+        -:  137:            else
+       79:  138:                c += ((x - t) + s);
+    11034:  139:            s = t;
+    11034:  140:            return *this;
+        -:  141:        }
+------------------
+_ZN21algebraic_accumulator7kbn_sumIdEpLERKd:
+    24304:  132:        auto & operator+=(T const & x)
+        -:  133:        {
+    24304:  134:            auto t = s + x;
+    24304:  135:            if (abs(x) < abs(s))
+    22992:  136:                c += ((s - t) + x);
+        -:  137:            else
+     1312:  138:                c += ((x - t) + s);
+    24304:  139:            s = t;
+    24304:  140:            return *this;
+        -:  141:        }
+------------------
+_ZN21algebraic_accumulator7kbn_sumIfEpLERKf:
+        3:  132:        auto & operator+=(T const & x)
+        -:  133:        {
+        3:  134:            auto t = s + x;
+        3:  135:            if (abs(x) < abs(s))
+        2:  136:                c += ((s - t) + x);
+        -:  137:            else
+        1:  138:                c += ((x - t) + s);
+        3:  139:            s = t;
+        3:  140:            return *this;
+        -:  141:        }
+------------------
+_ZN21algebraic_accumulator7kbn_sumIdEpLERKd:
+        9:  132:        auto & operator+=(T const & x)
+        -:  133:        {
+        9:  134:            auto t = s + x;
+        9:  135:            if (abs(x) < abs(s))
+        2:  136:                c += ((s - t) + x);
+        -:  137:            else
+        7:  138:                c += ((x - t) + s);
+        9:  139:            s = t;
+        9:  140:            return *this;
+        -:  141:        }
+------------------
+_ZN21algebraic_accumulator7kbn_sumIdEpLERKd:
+       31:  132:        auto & operator+=(T const & x)
+        -:  133:        {
+       31:  134:            auto t = s + x;
+       31:  135:            if (abs(x) < abs(s))
+       10:  136:                c += ((s - t) + x);
+        -:  137:            else
+       21:  138:                c += ((x - t) + s);
+       31:  139:            s = t;
+       31:  140:            return *this;
+        -:  141:        }
+------------------
+_ZN21algebraic_accumulator7kbn_sumIfEpLERKf:
+        2:  132:        auto & operator+=(T const & x)
+        -:  133:        {
+        2:  134:            auto t = s + x;
+        2:  135:            if (abs(x) < abs(s))
+        1:  136:                c += ((s - t) + x);
+        -:  137:            else
+        1:  138:                c += ((x - t) + s);
+        2:  139:            s = t;
+        2:  140:            return *this;
+        -:  141:        }
+------------------
+_ZN21algebraic_accumulator7kbn_sumIdEpLERKd:
+        4:  132:        auto & operator+=(T const & x)
+        -:  133:        {
+        4:  134:            auto t = s + x;
+        4:  135:            if (abs(x) < abs(s))
+        3:  136:                c += ((s - t) + x);
+        -:  137:            else
+        1:  138:                c += ((x - t) + s);
+        4:  139:            s = t;
+        4:  140:            return *this;
+        -:  141:        }
+------------------
+        -:  142:
+        -:  143:        T s, c;
+        -:  144:    };
+        -:  145:
+        -:  146:    template <typename T>
+        4:  147:    auto abs(kbn_sum<T> x)
+        -:  148:    {
+        4:  149:        x.s = std::abs(x.s);
+        4:  150:        x.c = std::abs(x.c);
+        4:  151:        return x;
+        -:  152:    }
+        -:  153:}

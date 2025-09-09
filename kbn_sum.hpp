@@ -49,8 +49,8 @@
  */
 
 #include <algorithm>
+#include <cmath>
 #include "exp/accumulator_exp.hpp"
-using std::abs;
 
 namespace algebraic_accumulator
 {
@@ -146,8 +146,8 @@ namespace algebraic_accumulator
     template <typename T>
     auto abs(kbn_sum<T> x)
     {
-        x.s = abs(x.s);
-        x.c = abs(x.c);
+        x.s = std::abs(x.s);
+        x.c = std::abs(x.c);
         return x;
     }
 }

@@ -1,0 +1,8 @@
+{
+	"InstallScripts" : 
+	[
+		"/home/spinoza/github/alpha/algebraic_reducers/build/cmake_install.cmake",
+		"/home/spinoza/github/alpha/algebraic_reducers/build/tests/cmake_install.cmake"
+	],
+	"Parallel" : false
+}

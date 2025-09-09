@@ -1,0 +1,858 @@
+        -:    0:Source:/home/spinoza/github/alpha/algebraic_reducers/tests/test_kbn_sum.cpp
+        -:    1:#include <gtest/gtest.h>
+        -:    2:#include <vector>
+        -:    3:#include <array>
+        -:    4:#include <cmath>
+        -:    5:#include <limits>
+        -:    6:#include <random>
+        -:    7:#include "kbn_sum.hpp"
+        -:    8:
+        -:    9:using namespace algebraic_accumulator;
+        -:   10:
+        -:   11:class KBNSumTest : public ::testing::Test {
+        -:   12:protected:
+       24:   13:    void SetUp() override {}
+       24:   14:    void TearDown() override {}
+        -:   15:    
+        -:   16:    // Helper function to check floating point equality with tolerance
+        -:   17:    template<typename T>
+        2:   18:    bool nearly_equal(T a, T b, T tolerance = 1e-12) {
+        2:   19:        return std::abs(a - b) <= tolerance;
+        -:   20:    }
+        -:   21:};
+        -:   22:
+        -:   23:// Test default constructor and initialization
+        4:   24:TEST_F(KBNSumTest, DefaultConstructor) {
+        1:   25:    kbn_sum<double> sum;
+       1*:   26:    EXPECT_EQ(static_cast<double>(sum), 0.0);
+       1*:   27:    EXPECT_EQ(sum.eval(), 0.0);
+       1*:   28:    EXPECT_EQ(sum.s, 0.0);
+       1*:   29:    EXPECT_EQ(sum.c, 0.0);
+        1:   30:}
+------------------
+_ZN34KBNSumTest_DefaultConstructor_TestC2Ev:
+        1:   24:TEST_F(KBNSumTest, DefaultConstructor) {
+------------------
+_ZN34KBNSumTest_DefaultConstructor_TestD0Ev:
+        1:   24:TEST_F(KBNSumTest, DefaultConstructor) {
+------------------
+_ZN34KBNSumTest_DefaultConstructor_TestD2Ev:
+        1:   24:TEST_F(KBNSumTest, DefaultConstructor) {
+------------------
+_ZN34KBNSumTest_DefaultConstructor_Test8TestBodyEv:
+        1:   24:TEST_F(KBNSumTest, DefaultConstructor) {
+        1:   25:    kbn_sum<double> sum;
+       1*:   26:    EXPECT_EQ(static_cast<double>(sum), 0.0);
+       1*:   27:    EXPECT_EQ(sum.eval(), 0.0);
+       1*:   28:    EXPECT_EQ(sum.s, 0.0);
+       1*:   29:    EXPECT_EQ(sum.c, 0.0);
+        1:   30:}
+------------------
+        -:   31:
+        -:   32:// Test constructor with initial value
+        4:   33:TEST_F(KBNSumTest, ValueConstructor) {
+        1:   34:    kbn_sum<double> sum(5.5);
+       1*:   35:    EXPECT_EQ(static_cast<double>(sum), 5.5);
+       1*:   36:    EXPECT_EQ(sum.eval(), 5.5);
+       1*:   37:    EXPECT_EQ(sum.s, 5.5);
+       1*:   38:    EXPECT_EQ(sum.c, 0.0);
+        1:   39:}
+------------------
+_ZN32KBNSumTest_ValueConstructor_TestC2Ev:
+        1:   33:TEST_F(KBNSumTest, ValueConstructor) {
+------------------
+_ZN32KBNSumTest_ValueConstructor_TestD0Ev:
+        1:   33:TEST_F(KBNSumTest, ValueConstructor) {
+------------------
+_ZN32KBNSumTest_ValueConstructor_TestD2Ev:
+        1:   33:TEST_F(KBNSumTest, ValueConstructor) {
+------------------
+_ZN32KBNSumTest_ValueConstructor_Test8TestBodyEv:
+        1:   33:TEST_F(KBNSumTest, ValueConstructor) {
+        1:   34:    kbn_sum<double> sum(5.5);
+       1*:   35:    EXPECT_EQ(static_cast<double>(sum), 5.5);
+       1*:   36:    EXPECT_EQ(sum.eval(), 5.5);
+       1*:   37:    EXPECT_EQ(sum.s, 5.5);
+       1*:   38:    EXPECT_EQ(sum.c, 0.0);
+        1:   39:}
+------------------
+        -:   40:
+        -:   41:// Test copy constructor
+        4:   42:TEST_F(KBNSumTest, CopyConstructor) {
+        1:   43:    kbn_sum<double> sum1(3.14);
+        1:   44:    kbn_sum<double> sum2(sum1);
+        -:   45:    
+       1*:   46:    EXPECT_EQ(static_cast<double>(sum2), 3.14);
+       1*:   47:    EXPECT_EQ(sum2.s, sum1.s);
+       1*:   48:    EXPECT_EQ(sum2.c, sum1.c);
+        1:   49:}
+------------------
+_ZN31KBNSumTest_CopyConstructor_TestC2Ev:
+        1:   42:TEST_F(KBNSumTest, CopyConstructor) {
+------------------
+_ZN31KBNSumTest_CopyConstructor_TestD0Ev:
+        1:   42:TEST_F(KBNSumTest, CopyConstructor) {
+------------------
+_ZN31KBNSumTest_CopyConstructor_TestD2Ev:
+        1:   42:TEST_F(KBNSumTest, CopyConstructor) {
+------------------
+_ZN31KBNSumTest_CopyConstructor_Test8TestBodyEv:
+        1:   42:TEST_F(KBNSumTest, CopyConstructor) {
+        1:   43:    kbn_sum<double> sum1(3.14);
+        1:   44:    kbn_sum<double> sum2(sum1);
+        -:   45:    
+       1*:   46:    EXPECT_EQ(static_cast<double>(sum2), 3.14);
+       1*:   47:    EXPECT_EQ(sum2.s, sum1.s);
+       1*:   48:    EXPECT_EQ(sum2.c, sum1.c);
+        1:   49:}
+------------------
+        -:   50:
+        -:   51:// Test copy assignment
+        4:   52:TEST_F(KBNSumTest, CopyAssignment) {
+        1:   53:    kbn_sum<double> sum1(2.71);
+        1:   54:    kbn_sum<double> sum2;
+        -:   55:    
+        1:   56:    sum2 = sum1;
+       1*:   57:    EXPECT_EQ(static_cast<double>(sum2), 2.71);
+       1*:   58:    EXPECT_EQ(sum2.s, sum1.s);
+       1*:   59:    EXPECT_EQ(sum2.c, sum1.c);
+        1:   60:}
+------------------
+_ZN30KBNSumTest_CopyAssignment_TestC2Ev:
+        1:   52:TEST_F(KBNSumTest, CopyAssignment) {
+------------------
+_ZN30KBNSumTest_CopyAssignment_TestD0Ev:
+        1:   52:TEST_F(KBNSumTest, CopyAssignment) {
+------------------
+_ZN30KBNSumTest_CopyAssignment_TestD2Ev:
+        1:   52:TEST_F(KBNSumTest, CopyAssignment) {
+------------------
+_ZN30KBNSumTest_CopyAssignment_Test8TestBodyEv:
+        1:   52:TEST_F(KBNSumTest, CopyAssignment) {
+        1:   53:    kbn_sum<double> sum1(2.71);
+        1:   54:    kbn_sum<double> sum2;
+        -:   55:    
+        1:   56:    sum2 = sum1;
+       1*:   57:    EXPECT_EQ(static_cast<double>(sum2), 2.71);
+       1*:   58:    EXPECT_EQ(sum2.s, sum1.s);
+       1*:   59:    EXPECT_EQ(sum2.c, sum1.c);
+        1:   60:}
+------------------
+        -:   61:
+        -:   62:// Test assignment from T
+        4:   63:TEST_F(KBNSumTest, ValueAssignment) {
+        1:   64:    kbn_sum<double> sum;
+        1:   65:    sum = 7.5;
+        -:   66:    
+       1*:   67:    EXPECT_EQ(static_cast<double>(sum), 7.5);
+       1*:   68:    EXPECT_EQ(sum.s, 7.5);
+        1:   69:}
+------------------
+_ZN31KBNSumTest_ValueAssignment_TestC2Ev:
+        1:   63:TEST_F(KBNSumTest, ValueAssignment) {
+------------------
+_ZN31KBNSumTest_ValueAssignment_TestD0Ev:
+        1:   63:TEST_F(KBNSumTest, ValueAssignment) {
+------------------
+_ZN31KBNSumTest_ValueAssignment_TestD2Ev:
+        1:   63:TEST_F(KBNSumTest, ValueAssignment) {
+------------------
+_ZN31KBNSumTest_ValueAssignment_Test8TestBodyEv:
+        1:   63:TEST_F(KBNSumTest, ValueAssignment) {
+        1:   64:    kbn_sum<double> sum;
+        1:   65:    sum = 7.5;
+        -:   66:    
+       1*:   67:    EXPECT_EQ(static_cast<double>(sum), 7.5);
+       1*:   68:    EXPECT_EQ(sum.s, 7.5);
+        1:   69:}
+------------------
+        -:   70:
+        -:   71:// Test conversion operator
+        4:   72:TEST_F(KBNSumTest, ConversionOperator) {
+        1:   73:    kbn_sum<double> sum(4.2);
+        1:   74:    double value = sum;
+       1*:   75:    EXPECT_EQ(value, 4.2);
+        1:   76:}
+------------------
+_ZN34KBNSumTest_ConversionOperator_TestC2Ev:
+        1:   72:TEST_F(KBNSumTest, ConversionOperator) {
+------------------
+_ZN34KBNSumTest_ConversionOperator_TestD0Ev:
+        1:   72:TEST_F(KBNSumTest, ConversionOperator) {
+------------------
+_ZN34KBNSumTest_ConversionOperator_TestD2Ev:
+        1:   72:TEST_F(KBNSumTest, ConversionOperator) {
+------------------
+_ZN34KBNSumTest_ConversionOperator_Test8TestBodyEv:
+        1:   72:TEST_F(KBNSumTest, ConversionOperator) {
+        1:   73:    kbn_sum<double> sum(4.2);
+        1:   74:    double value = sum;
+       1*:   75:    EXPECT_EQ(value, 4.2);
+        1:   76:}
+------------------
+        -:   77:
+        -:   78:// Test eval method
+        4:   79:TEST_F(KBNSumTest, EvalMethod) {
+        1:   80:    kbn_sum<double> sum(1.5);
+       1*:   81:    EXPECT_EQ(sum.eval(), 1.5);
+        1:   82:}
+------------------
+_ZN26KBNSumTest_EvalMethod_TestC2Ev:
+        1:   79:TEST_F(KBNSumTest, EvalMethod) {
+------------------
+_ZN26KBNSumTest_EvalMethod_TestD0Ev:
+        1:   79:TEST_F(KBNSumTest, EvalMethod) {
+------------------
+_ZN26KBNSumTest_EvalMethod_TestD2Ev:
+        1:   79:TEST_F(KBNSumTest, EvalMethod) {
+------------------
+_ZN26KBNSumTest_EvalMethod_Test8TestBodyEv:
+        1:   79:TEST_F(KBNSumTest, EvalMethod) {
+        1:   80:    kbn_sum<double> sum(1.5);
+       1*:   81:    EXPECT_EQ(sum.eval(), 1.5);
+        1:   82:}
+------------------
+        -:   83:
+        -:   84:// Test addition with scalar
+        4:   85:TEST_F(KBNSumTest, AdditionWithScalar) {
+        1:   86:    kbn_sum<double> sum(1.0);
+        1:   87:    sum += 2.0;
+       1*:   88:    EXPECT_EQ(static_cast<double>(sum), 3.0);
+        -:   89:    
+        1:   90:    sum += -1.5;
+       1*:   91:    EXPECT_EQ(static_cast<double>(sum), 1.5);
+        1:   92:}
+------------------
+_ZN34KBNSumTest_AdditionWithScalar_TestC2Ev:
+        1:   85:TEST_F(KBNSumTest, AdditionWithScalar) {
+------------------
+_ZN34KBNSumTest_AdditionWithScalar_TestD0Ev:
+        1:   85:TEST_F(KBNSumTest, AdditionWithScalar) {
+------------------
+_ZN34KBNSumTest_AdditionWithScalar_TestD2Ev:
+        1:   85:TEST_F(KBNSumTest, AdditionWithScalar) {
+------------------
+_ZN34KBNSumTest_AdditionWithScalar_Test8TestBodyEv:
+        1:   85:TEST_F(KBNSumTest, AdditionWithScalar) {
+        1:   86:    kbn_sum<double> sum(1.0);
+        1:   87:    sum += 2.0;
+       1*:   88:    EXPECT_EQ(static_cast<double>(sum), 3.0);
+        -:   89:    
+        1:   90:    sum += -1.5;
+       1*:   91:    EXPECT_EQ(static_cast<double>(sum), 1.5);
+        1:   92:}
+------------------
+        -:   93:
+        -:   94:// Test addition with another kbn_sum
+        4:   95:TEST_F(KBNSumTest, AdditionWithKBNSum) {
+        1:   96:    kbn_sum<double> sum1(2.5);
+        1:   97:    kbn_sum<double> sum2(1.5);
+        -:   98:    
+        1:   99:    sum1 += sum2;
+       1*:  100:    EXPECT_EQ(static_cast<double>(sum1), 4.0);
+        1:  101:}
+------------------
+_ZN34KBNSumTest_AdditionWithKBNSum_TestC2Ev:
+        1:   95:TEST_F(KBNSumTest, AdditionWithKBNSum) {
+------------------
+_ZN34KBNSumTest_AdditionWithKBNSum_TestD0Ev:
+        1:   95:TEST_F(KBNSumTest, AdditionWithKBNSum) {
+------------------
+_ZN34KBNSumTest_AdditionWithKBNSum_TestD2Ev:
+        1:   95:TEST_F(KBNSumTest, AdditionWithKBNSum) {
+------------------
+_ZN34KBNSumTest_AdditionWithKBNSum_Test8TestBodyEv:
+        1:   95:TEST_F(KBNSumTest, AdditionWithKBNSum) {
+        1:   96:    kbn_sum<double> sum1(2.5);
+        1:   97:    kbn_sum<double> sum2(1.5);
+        -:   98:    
+        1:   99:    sum1 += sum2;
+       1*:  100:    EXPECT_EQ(static_cast<double>(sum1), 4.0);
+        1:  101:}
+------------------
+        -:  102:
+        -:  103:// Test binary addition operator
+        4:  104:TEST_F(KBNSumTest, BinaryAddition) {
+        1:  105:    kbn_sum<double> sum1(3.0);
+        1:  106:    kbn_sum<double> sum2(2.0);
+        -:  107:    
+        1:  108:    auto result = sum1 + sum2;
+       1*:  109:    EXPECT_EQ(static_cast<double>(result), 5.0);
+        -:  110:    
+        -:  111:    // Original values should remain unchanged
+       1*:  112:    EXPECT_EQ(static_cast<double>(sum1), 3.0);
+       1*:  113:    EXPECT_EQ(static_cast<double>(sum2), 2.0);
+        1:  114:}
+------------------
+_ZN30KBNSumTest_BinaryAddition_TestC2Ev:
+        1:  104:TEST_F(KBNSumTest, BinaryAddition) {
+------------------
+_ZN30KBNSumTest_BinaryAddition_TestD0Ev:
+        1:  104:TEST_F(KBNSumTest, BinaryAddition) {
+------------------
+_ZN30KBNSumTest_BinaryAddition_TestD2Ev:
+        1:  104:TEST_F(KBNSumTest, BinaryAddition) {
+------------------
+_ZN30KBNSumTest_BinaryAddition_Test8TestBodyEv:
+        1:  104:TEST_F(KBNSumTest, BinaryAddition) {
+        1:  105:    kbn_sum<double> sum1(3.0);
+        1:  106:    kbn_sum<double> sum2(2.0);
+        -:  107:    
+        1:  108:    auto result = sum1 + sum2;
+       1*:  109:    EXPECT_EQ(static_cast<double>(result), 5.0);
+        -:  110:    
+        -:  111:    // Original values should remain unchanged
+       1*:  112:    EXPECT_EQ(static_cast<double>(sum1), 3.0);
+       1*:  113:    EXPECT_EQ(static_cast<double>(sum2), 2.0);
+        1:  114:}
+------------------
+        -:  115:
+        -:  116:// Test comparison operators
+        4:  117:TEST_F(KBNSumTest, ComparisonOperators) {
+        1:  118:    kbn_sum<double> sum1(5.0);
+        1:  119:    kbn_sum<double> sum2(3.0);
+        1:  120:    kbn_sum<double> sum3(5.0);
+        -:  121:    
+        -:  122:    // Test equality
+       1*:  123:    EXPECT_TRUE(sum1 == sum3);
+       1*:  124:    EXPECT_FALSE(sum1 == sum2);
+        -:  125:    
+        -:  126:    // Test less than with kbn_sum
+       1*:  127:    EXPECT_TRUE(sum2 < sum1);
+       1*:  128:    EXPECT_FALSE(sum1 < sum2);
+       1*:  129:    EXPECT_FALSE(sum1 < sum3);
+        -:  130:    
+        -:  131:    // Test less than with scalar
+       1*:  132:    EXPECT_TRUE(sum2 < 4.0);
+       1*:  133:    EXPECT_FALSE(sum1 < 4.0);
+        1:  134:}
+------------------
+_ZN35KBNSumTest_ComparisonOperators_TestC2Ev:
+        1:  117:TEST_F(KBNSumTest, ComparisonOperators) {
+------------------
+_ZN35KBNSumTest_ComparisonOperators_TestD0Ev:
+        1:  117:TEST_F(KBNSumTest, ComparisonOperators) {
+------------------
+_ZN35KBNSumTest_ComparisonOperators_TestD2Ev:
+        1:  117:TEST_F(KBNSumTest, ComparisonOperators) {
+------------------
+_ZN35KBNSumTest_ComparisonOperators_Test8TestBodyEv:
+        1:  117:TEST_F(KBNSumTest, ComparisonOperators) {
+        1:  118:    kbn_sum<double> sum1(5.0);
+        1:  119:    kbn_sum<double> sum2(3.0);
+        1:  120:    kbn_sum<double> sum3(5.0);
+        -:  121:    
+        -:  122:    // Test equality
+       1*:  123:    EXPECT_TRUE(sum1 == sum3);
+       1*:  124:    EXPECT_FALSE(sum1 == sum2);
+        -:  125:    
+        -:  126:    // Test less than with kbn_sum
+       1*:  127:    EXPECT_TRUE(sum2 < sum1);
+       1*:  128:    EXPECT_FALSE(sum1 < sum2);
+       1*:  129:    EXPECT_FALSE(sum1 < sum3);
+        -:  130:    
+        -:  131:    // Test less than with scalar
+       1*:  132:    EXPECT_TRUE(sum2 < 4.0);
+       1*:  133:    EXPECT_FALSE(sum1 < 4.0);
+        1:  134:}
+------------------
+        -:  135:
+        -:  136:// Test reduce method with iterators
+        4:  137:TEST_F(KBNSumTest, ReduceMethod) {
+        3:  138:    std::vector<double> values = {1.0, 2.0, 3.0, 4.0, 5.0};
+        -:  139:    
+        1:  140:    kbn_sum<double> sum;
+        1:  141:    sum.reduce(values.begin(), values.end());
+        -:  142:    
+       1*:  143:    EXPECT_EQ(static_cast<double>(sum), 15.0);
+        1:  144:}
+------------------
+_ZN28KBNSumTest_ReduceMethod_TestC2Ev:
+        1:  137:TEST_F(KBNSumTest, ReduceMethod) {
+------------------
+_ZN28KBNSumTest_ReduceMethod_TestD0Ev:
+        1:  137:TEST_F(KBNSumTest, ReduceMethod) {
+------------------
+_ZN28KBNSumTest_ReduceMethod_TestD2Ev:
+        1:  137:TEST_F(KBNSumTest, ReduceMethod) {
+------------------
+_ZN28KBNSumTest_ReduceMethod_Test8TestBodyEv:
+        1:  137:TEST_F(KBNSumTest, ReduceMethod) {
+        3:  138:    std::vector<double> values = {1.0, 2.0, 3.0, 4.0, 5.0};
+        -:  139:    
+        1:  140:    kbn_sum<double> sum;
+        1:  141:    sum.reduce(values.begin(), values.end());
+        -:  142:    
+       1*:  143:    EXPECT_EQ(static_cast<double>(sum), 15.0);
+        1:  144:}
+------------------
+        -:  145:
+        -:  146:// Test reduce method with arrays
+        4:  147:TEST_F(KBNSumTest, ReduceMethodArray) {
+        1:  148:    std::array<double, 4> values = {2.5, 1.5, 3.0, 2.0};
+        -:  149:    
+        1:  150:    kbn_sum<double> sum;
+        1:  151:    sum.reduce(values.begin(), values.end());
+        -:  152:    
+       1*:  153:    EXPECT_EQ(static_cast<double>(sum), 9.0);
+        1:  154:}
+------------------
+_ZN33KBNSumTest_ReduceMethodArray_TestC2Ev:
+        1:  147:TEST_F(KBNSumTest, ReduceMethodArray) {
+------------------
+_ZN33KBNSumTest_ReduceMethodArray_TestD0Ev:
+        1:  147:TEST_F(KBNSumTest, ReduceMethodArray) {
+------------------
+_ZN33KBNSumTest_ReduceMethodArray_TestD2Ev:
+        1:  147:TEST_F(KBNSumTest, ReduceMethodArray) {
+------------------
+_ZN33KBNSumTest_ReduceMethodArray_Test8TestBodyEv:
+        1:  147:TEST_F(KBNSumTest, ReduceMethodArray) {
+        1:  148:    std::array<double, 4> values = {2.5, 1.5, 3.0, 2.0};
+        -:  149:    
+        1:  150:    kbn_sum<double> sum;
+        1:  151:    sum.reduce(values.begin(), values.end());
+        -:  152:    
+       1*:  153:    EXPECT_EQ(static_cast<double>(sum), 9.0);
+        1:  154:}
+------------------
+        -:  155:
+        -:  156:// Test numerical accuracy - classic floating point error case
+        4:  157:TEST_F(KBNSumTest, NumericalAccuracy) {
+        1:  158:    kbn_sum<double> kbn_sum_result;
+        1:  159:    double naive_sum = 0.0;
+        -:  160:    
+        -:  161:    // Add a large number, then a small number, then subtract the large number
+        -:  162:    // This is a classic case where naive summation loses precision
+        1:  163:    double large = 1e16;
+        1:  164:    double small = 1.0;
+        -:  165:    
+        -:  166:    // KBN sum
+        1:  167:    kbn_sum_result += large;
+        1:  168:    kbn_sum_result += small;
+        1:  169:    kbn_sum_result += -large;
+        -:  170:    
+        -:  171:    // Naive sum
+        1:  172:    naive_sum += large;
+        1:  173:    naive_sum += small;
+        1:  174:    naive_sum -= large;
+        -:  175:    
+        -:  176:    // KBN should preserve the small value better than naive summation
+        1:  177:    double kbn_result = static_cast<double>(kbn_sum_result);
+        -:  178:    
+        -:  179:    // For this specific case, both might be close, but KBN should be more accurate
+        -:  180:    // in general scenarios
+       1*:  181:    EXPECT_TRUE(kbn_result >= 0.0); // Should not be negative due to precision loss
+        1:  182:}
+------------------
+_ZN33KBNSumTest_NumericalAccuracy_TestC2Ev:
+        1:  157:TEST_F(KBNSumTest, NumericalAccuracy) {
+------------------
+_ZN33KBNSumTest_NumericalAccuracy_TestD0Ev:
+        1:  157:TEST_F(KBNSumTest, NumericalAccuracy) {
+------------------
+_ZN33KBNSumTest_NumericalAccuracy_TestD2Ev:
+        1:  157:TEST_F(KBNSumTest, NumericalAccuracy) {
+------------------
+_ZN33KBNSumTest_NumericalAccuracy_Test8TestBodyEv:
+        1:  157:TEST_F(KBNSumTest, NumericalAccuracy) {
+        1:  158:    kbn_sum<double> kbn_sum_result;
+        1:  159:    double naive_sum = 0.0;
+        -:  160:    
+        -:  161:    // Add a large number, then a small number, then subtract the large number
+        -:  162:    // This is a classic case where naive summation loses precision
+        1:  163:    double large = 1e16;
+        1:  164:    double small = 1.0;
+        -:  165:    
+        -:  166:    // KBN sum
+        1:  167:    kbn_sum_result += large;
+        1:  168:    kbn_sum_result += small;
+        1:  169:    kbn_sum_result += -large;
+        -:  170:    
+        -:  171:    // Naive sum
+        1:  172:    naive_sum += large;
+        1:  173:    naive_sum += small;
+        1:  174:    naive_sum -= large;
+        -:  175:    
+        -:  176:    // KBN should preserve the small value better than naive summation
+        1:  177:    double kbn_result = static_cast<double>(kbn_sum_result);
+        -:  178:    
+        -:  179:    // For this specific case, both might be close, but KBN should be more accurate
+        -:  180:    // in general scenarios
+       1*:  181:    EXPECT_TRUE(kbn_result >= 0.0); // Should not be negative due to precision loss
+        1:  182:}
+------------------
+        -:  183:
+        -:  184:// Test with many small values
+        4:  185:TEST_F(KBNSumTest, ManySmallValues) {
+        1:  186:    kbn_sum<double> sum;
+        1:  187:    std::vector<double> small_values(1000, 0.001);
+        -:  188:    
+        1:  189:    sum.reduce(small_values.begin(), small_values.end());
+        -:  190:    
+       1*:  191:    EXPECT_TRUE(nearly_equal(static_cast<double>(sum), 1.0, 1e-10));
+        1:  192:}
+------------------
+_ZN31KBNSumTest_ManySmallValues_TestC2Ev:
+        1:  185:TEST_F(KBNSumTest, ManySmallValues) {
+------------------
+_ZN31KBNSumTest_ManySmallValues_TestD0Ev:
+        1:  185:TEST_F(KBNSumTest, ManySmallValues) {
+------------------
+_ZN31KBNSumTest_ManySmallValues_TestD2Ev:
+        1:  185:TEST_F(KBNSumTest, ManySmallValues) {
+------------------
+_ZN31KBNSumTest_ManySmallValues_Test8TestBodyEv:
+        1:  185:TEST_F(KBNSumTest, ManySmallValues) {
+        1:  186:    kbn_sum<double> sum;
+        1:  187:    std::vector<double> small_values(1000, 0.001);
+        -:  188:    
+        1:  189:    sum.reduce(small_values.begin(), small_values.end());
+        -:  190:    
+       1*:  191:    EXPECT_TRUE(nearly_equal(static_cast<double>(sum), 1.0, 1e-10));
+        1:  192:}
+------------------
+        -:  193:
+        -:  194:// Test with mixed positive and negative values
+        4:  195:TEST_F(KBNSumTest, MixedSignValues) {
+        3:  196:    std::vector<double> values = {10.0, -5.0, 3.0, -2.0, 1.5, -0.5};
+        -:  197:    
+        1:  198:    kbn_sum<double> sum;
+        1:  199:    sum.reduce(values.begin(), values.end());
+        -:  200:    
+       1*:  201:    EXPECT_EQ(static_cast<double>(sum), 7.0);
+        1:  202:}
+------------------
+_ZN31KBNSumTest_MixedSignValues_TestC2Ev:
+        1:  195:TEST_F(KBNSumTest, MixedSignValues) {
+------------------
+_ZN31KBNSumTest_MixedSignValues_TestD0Ev:
+        1:  195:TEST_F(KBNSumTest, MixedSignValues) {
+------------------
+_ZN31KBNSumTest_MixedSignValues_TestD2Ev:
+        1:  195:TEST_F(KBNSumTest, MixedSignValues) {
+------------------
+_ZN31KBNSumTest_MixedSignValues_Test8TestBodyEv:
+        1:  195:TEST_F(KBNSumTest, MixedSignValues) {
+        3:  196:    std::vector<double> values = {10.0, -5.0, 3.0, -2.0, 1.5, -0.5};
+        -:  197:    
+        1:  198:    kbn_sum<double> sum;
+        1:  199:    sum.reduce(values.begin(), values.end());
+        -:  200:    
+       1*:  201:    EXPECT_EQ(static_cast<double>(sum), 7.0);
+        1:  202:}
+------------------
+        -:  203:
+        -:  204:// Test abs function
+        4:  205:TEST_F(KBNSumTest, AbsFunction) {
+        1:  206:    kbn_sum<double> negative_sum(-5.0);
+        1:  207:    negative_sum.c = -0.1; // Add some correction term
+        -:  208:    
+        1:  209:    auto abs_sum = abs(negative_sum);
+        -:  210:    
+       1*:  211:    EXPECT_GT(static_cast<double>(abs_sum), 0.0);
+       1*:  212:    EXPECT_EQ(abs_sum.s, 5.0);
+       1*:  213:    EXPECT_EQ(abs_sum.c, 0.1);
+        1:  214:}
+------------------
+_ZN27KBNSumTest_AbsFunction_TestC2Ev:
+        1:  205:TEST_F(KBNSumTest, AbsFunction) {
+------------------
+_ZN27KBNSumTest_AbsFunction_TestD0Ev:
+        1:  205:TEST_F(KBNSumTest, AbsFunction) {
+------------------
+_ZN27KBNSumTest_AbsFunction_TestD2Ev:
+        1:  205:TEST_F(KBNSumTest, AbsFunction) {
+------------------
+_ZN27KBNSumTest_AbsFunction_Test8TestBodyEv:
+        1:  205:TEST_F(KBNSumTest, AbsFunction) {
+        1:  206:    kbn_sum<double> negative_sum(-5.0);
+        1:  207:    negative_sum.c = -0.1; // Add some correction term
+        -:  208:    
+        1:  209:    auto abs_sum = abs(negative_sum);
+        -:  210:    
+       1*:  211:    EXPECT_GT(static_cast<double>(abs_sum), 0.0);
+       1*:  212:    EXPECT_EQ(abs_sum.s, 5.0);
+       1*:  213:    EXPECT_EQ(abs_sum.c, 0.1);
+        1:  214:}
+------------------
+        -:  215:
+        -:  216:// Test with float type
+        4:  217:TEST_F(KBNSumTest, FloatType) {
+        1:  218:    kbn_sum<float> sum(1.5f);
+        1:  219:    sum += 2.5f;
+        -:  220:    
+       1*:  221:    EXPECT_FLOAT_EQ(static_cast<float>(sum), 4.0f);
+        1:  222:}
+------------------
+_ZN25KBNSumTest_FloatType_TestC2Ev:
+        1:  217:TEST_F(KBNSumTest, FloatType) {
+------------------
+_ZN25KBNSumTest_FloatType_TestD0Ev:
+        1:  217:TEST_F(KBNSumTest, FloatType) {
+------------------
+_ZN25KBNSumTest_FloatType_TestD2Ev:
+        1:  217:TEST_F(KBNSumTest, FloatType) {
+------------------
+_ZN25KBNSumTest_FloatType_Test8TestBodyEv:
+        1:  217:TEST_F(KBNSumTest, FloatType) {
+        1:  218:    kbn_sum<float> sum(1.5f);
+        1:  219:    sum += 2.5f;
+        -:  220:    
+       1*:  221:    EXPECT_FLOAT_EQ(static_cast<float>(sum), 4.0f);
+        1:  222:}
+------------------
+        -:  223:
+        -:  224:// Test edge cases with zero
+        4:  225:TEST_F(KBNSumTest, ZeroOperations) {
+        1:  226:    kbn_sum<double> sum(5.0);
+        1:  227:    sum += 0.0;
+       1*:  228:    EXPECT_EQ(static_cast<double>(sum), 5.0);
+        -:  229:    
+        1:  230:    kbn_sum<double> zero_sum;
+        1:  231:    sum += zero_sum;
+       1*:  232:    EXPECT_EQ(static_cast<double>(sum), 5.0);
+        1:  233:}
+------------------
+_ZN30KBNSumTest_ZeroOperations_TestC2Ev:
+        1:  225:TEST_F(KBNSumTest, ZeroOperations) {
+------------------
+_ZN30KBNSumTest_ZeroOperations_TestD0Ev:
+        1:  225:TEST_F(KBNSumTest, ZeroOperations) {
+------------------
+_ZN30KBNSumTest_ZeroOperations_TestD2Ev:
+        1:  225:TEST_F(KBNSumTest, ZeroOperations) {
+------------------
+_ZN30KBNSumTest_ZeroOperations_Test8TestBodyEv:
+        1:  225:TEST_F(KBNSumTest, ZeroOperations) {
+        1:  226:    kbn_sum<double> sum(5.0);
+        1:  227:    sum += 0.0;
+       1*:  228:    EXPECT_EQ(static_cast<double>(sum), 5.0);
+        -:  229:    
+        1:  230:    kbn_sum<double> zero_sum;
+        1:  231:    sum += zero_sum;
+       1*:  232:    EXPECT_EQ(static_cast<double>(sum), 5.0);
+        1:  233:}
+------------------
+        -:  234:
+        -:  235:// Test large numbers to stress the correction mechanism
+        4:  236:TEST_F(KBNSumTest, LargeNumbers) {
+        1:  237:    kbn_sum<double> sum;
+        -:  238:    
+        -:  239:    // Add numbers in a way that would cause precision loss in naive summation
+        1:  240:    sum += 1e20;
+        1:  241:    sum += 1.0;
+        1:  242:    sum += 1.0;
+        1:  243:    sum += -1e20;
+        -:  244:    
+        -:  245:    // The result should be close to 2.0
+        1:  246:    double result = static_cast<double>(sum);
+       1*:  247:    EXPECT_GT(result, 1.9); // Should be close to 2.0, better than naive summation
+        1:  248:}
+------------------
+_ZN28KBNSumTest_LargeNumbers_TestC2Ev:
+        1:  236:TEST_F(KBNSumTest, LargeNumbers) {
+------------------
+_ZN28KBNSumTest_LargeNumbers_TestD0Ev:
+        1:  236:TEST_F(KBNSumTest, LargeNumbers) {
+------------------
+_ZN28KBNSumTest_LargeNumbers_TestD2Ev:
+        1:  236:TEST_F(KBNSumTest, LargeNumbers) {
+------------------
+_ZN28KBNSumTest_LargeNumbers_Test8TestBodyEv:
+        1:  236:TEST_F(KBNSumTest, LargeNumbers) {
+        1:  237:    kbn_sum<double> sum;
+        -:  238:    
+        -:  239:    // Add numbers in a way that would cause precision loss in naive summation
+        1:  240:    sum += 1e20;
+        1:  241:    sum += 1.0;
+        1:  242:    sum += 1.0;
+        1:  243:    sum += -1e20;
+        -:  244:    
+        -:  245:    // The result should be close to 2.0
+        1:  246:    double result = static_cast<double>(sum);
+       1*:  247:    EXPECT_GT(result, 1.9); // Should be close to 2.0, better than naive summation
+        1:  248:}
+------------------
+        -:  249:
+        -:  250:// Test empty range reduction
+        4:  251:TEST_F(KBNSumTest, EmptyRangeReduction) {
+        1:  252:    std::vector<double> empty_vector;
+        1:  253:    kbn_sum<double> sum;
+        -:  254:    
+        1:  255:    sum.reduce(empty_vector.begin(), empty_vector.end());
+       1*:  256:    EXPECT_EQ(static_cast<double>(sum), 0.0);
+        1:  257:}
+------------------
+_ZN35KBNSumTest_EmptyRangeReduction_TestC2Ev:
+        1:  251:TEST_F(KBNSumTest, EmptyRangeReduction) {
+------------------
+_ZN35KBNSumTest_EmptyRangeReduction_TestD0Ev:
+        1:  251:TEST_F(KBNSumTest, EmptyRangeReduction) {
+------------------
+_ZN35KBNSumTest_EmptyRangeReduction_TestD2Ev:
+        1:  251:TEST_F(KBNSumTest, EmptyRangeReduction) {
+------------------
+_ZN35KBNSumTest_EmptyRangeReduction_Test8TestBodyEv:
+        1:  251:TEST_F(KBNSumTest, EmptyRangeReduction) {
+        1:  252:    std::vector<double> empty_vector;
+        1:  253:    kbn_sum<double> sum;
+        -:  254:    
+        1:  255:    sum.reduce(empty_vector.begin(), empty_vector.end());
+       1*:  256:    EXPECT_EQ(static_cast<double>(sum), 0.0);
+        1:  257:}
+------------------
+        -:  258:
+        -:  259:// Test single element reduction
+        4:  260:TEST_F(KBNSumTest, SingleElementReduction) {
+        3:  261:    std::vector<double> single_element = {42.0};
+        1:  262:    kbn_sum<double> sum;
+        -:  263:    
+        1:  264:    sum.reduce(single_element.begin(), single_element.end());
+       1*:  265:    EXPECT_EQ(static_cast<double>(sum), 42.0);
+        1:  266:}
+------------------
+_ZN38KBNSumTest_SingleElementReduction_TestC2Ev:
+        1:  260:TEST_F(KBNSumTest, SingleElementReduction) {
+------------------
+_ZN38KBNSumTest_SingleElementReduction_TestD0Ev:
+        1:  260:TEST_F(KBNSumTest, SingleElementReduction) {
+------------------
+_ZN38KBNSumTest_SingleElementReduction_TestD2Ev:
+        1:  260:TEST_F(KBNSumTest, SingleElementReduction) {
+------------------
+_ZN38KBNSumTest_SingleElementReduction_Test8TestBodyEv:
+        1:  260:TEST_F(KBNSumTest, SingleElementReduction) {
+        3:  261:    std::vector<double> single_element = {42.0};
+        1:  262:    kbn_sum<double> sum;
+        -:  263:    
+        1:  264:    sum.reduce(single_element.begin(), single_element.end());
+       1*:  265:    EXPECT_EQ(static_cast<double>(sum), 42.0);
+        1:  266:}
+------------------
+        -:  267:
+        -:  268:// Test the correction mechanism specifically
+        4:  269:TEST_F(KBNSumTest, CorrectionMechanism) {
+        1:  270:    kbn_sum<double> sum;
+        -:  271:    
+        -:  272:    // This test verifies the specific branches in the += operator
+        -:  273:    // When abs(x) < abs(s)
+        1:  274:    sum.s = 100.0;
+        1:  275:    sum += 1.0;
+        -:  276:    
+        -:  277:    // The correction should be calculated as ((s - t) + x)
+        -:  278:    // where t = s + x = 101.0
+        -:  279:    // correction = ((100.0 - 101.0) + 1.0) = 0.0
+       1*:  280:    EXPECT_EQ(static_cast<double>(sum), 101.0);
+        -:  281:    
+        -:  282:    // When abs(x) >= abs(s)
+        1:  283:    kbn_sum<double> sum2;
+        1:  284:    sum2.s = 1.0;
+        1:  285:    sum2 += 100.0;
+        -:  286:    
+        -:  287:    // The correction should be calculated as ((x - t) + s)
+        -:  288:    // where t = s + x = 101.0
+        -:  289:    // correction = ((100.0 - 101.0) + 1.0) = 0.0
+       1*:  290:    EXPECT_EQ(static_cast<double>(sum2), 101.0);
+        1:  291:}
+------------------
+_ZN35KBNSumTest_CorrectionMechanism_TestC2Ev:
+        1:  269:TEST_F(KBNSumTest, CorrectionMechanism) {
+------------------
+_ZN35KBNSumTest_CorrectionMechanism_TestD0Ev:
+        1:  269:TEST_F(KBNSumTest, CorrectionMechanism) {
+------------------
+_ZN35KBNSumTest_CorrectionMechanism_TestD2Ev:
+        1:  269:TEST_F(KBNSumTest, CorrectionMechanism) {
+------------------
+_ZN35KBNSumTest_CorrectionMechanism_Test8TestBodyEv:
+        1:  269:TEST_F(KBNSumTest, CorrectionMechanism) {
+        1:  270:    kbn_sum<double> sum;
+        -:  271:    
+        -:  272:    // This test verifies the specific branches in the += operator
+        -:  273:    // When abs(x) < abs(s)
+        1:  274:    sum.s = 100.0;
+        1:  275:    sum += 1.0;
+        -:  276:    
+        -:  277:    // The correction should be calculated as ((s - t) + x)
+        -:  278:    // where t = s + x = 101.0
+        -:  279:    // correction = ((100.0 - 101.0) + 1.0) = 0.0
+       1*:  280:    EXPECT_EQ(static_cast<double>(sum), 101.0);
+        -:  281:    
+        -:  282:    // When abs(x) >= abs(s)
+        1:  283:    kbn_sum<double> sum2;
+        1:  284:    sum2.s = 1.0;
+        1:  285:    sum2 += 100.0;
+        -:  286:    
+        -:  287:    // The correction should be calculated as ((x - t) + s)
+        -:  288:    // where t = s + x = 101.0
+        -:  289:    // correction = ((100.0 - 101.0) + 1.0) = 0.0
+       1*:  290:    EXPECT_EQ(static_cast<double>(sum2), 101.0);
+        1:  291:}
+------------------
+        -:  292:
+        -:  293:// Performance/stress test with random values
+        4:  294:TEST_F(KBNSumTest, RandomValuesStressTest) {
+        1:  295:    std::random_device rd;
+        1:  296:    std::mt19937 gen(rd());
+        1:  297:    std::uniform_real_distribution<double> dis(-1000.0, 1000.0);
+        -:  298:    
+        1:  299:    std::vector<double> random_values(10000);
+    10001:  300:    for (auto& val : random_values) {
+    10000:  301:        val = dis(gen);
+        -:  302:    }
+        -:  303:    
+        1:  304:    kbn_sum<double> sum;
+        1:  305:    sum.reduce(random_values.begin(), random_values.end());
+        -:  306:    
+        -:  307:    // Calculate expected sum using long double for higher precision reference
+        1:  308:    long double expected = 0.0L;
+    10001:  309:    for (double val : random_values) {
+    10000:  310:        expected += val;
+        -:  311:    }
+        -:  312:    
+        1:  313:    double kbn_result = static_cast<double>(sum);
+        1:  314:    double expected_double = static_cast<double>(expected);
+        -:  315:    
+        -:  316:    // KBN should be at least as accurate as naive double summation
+       1*:  317:    EXPECT_TRUE(std::isfinite(kbn_result));
+       1*:  318:    EXPECT_TRUE(nearly_equal(kbn_result, expected_double, 1e-10));
+        1:  319:}
+------------------
+_ZN38KBNSumTest_RandomValuesStressTest_TestC2Ev:
+        1:  294:TEST_F(KBNSumTest, RandomValuesStressTest) {
+------------------
+_ZN38KBNSumTest_RandomValuesStressTest_TestD0Ev:
+        1:  294:TEST_F(KBNSumTest, RandomValuesStressTest) {
+------------------
+_ZN38KBNSumTest_RandomValuesStressTest_TestD2Ev:
+        1:  294:TEST_F(KBNSumTest, RandomValuesStressTest) {
+------------------
+_ZN38KBNSumTest_RandomValuesStressTest_Test8TestBodyEv:
+        1:  294:TEST_F(KBNSumTest, RandomValuesStressTest) {
+        1:  295:    std::random_device rd;
+        1:  296:    std::mt19937 gen(rd());
+        1:  297:    std::uniform_real_distribution<double> dis(-1000.0, 1000.0);
+        -:  298:    
+        1:  299:    std::vector<double> random_values(10000);
+    10001:  300:    for (auto& val : random_values) {
+    10000:  301:        val = dis(gen);
+        -:  302:    }
+        -:  303:    
+        1:  304:    kbn_sum<double> sum;
+        1:  305:    sum.reduce(random_values.begin(), random_values.end());
+        -:  306:    
+        -:  307:    // Calculate expected sum using long double for higher precision reference
+        1:  308:    long double expected = 0.0L;
+    10001:  309:    for (double val : random_values) {
+    10000:  310:        expected += val;
+        -:  311:    }
+        -:  312:    
+        1:  313:    double kbn_result = static_cast<double>(sum);
+        1:  314:    double expected_double = static_cast<double>(expected);
+        -:  315:    
+        -:  316:    // KBN should be at least as accurate as naive double summation
+       1*:  317:    EXPECT_TRUE(std::isfinite(kbn_result));
+       1*:  318:    EXPECT_TRUE(nearly_equal(kbn_result, expected_double, 1e-10));
+        1:  319:}
+------------------

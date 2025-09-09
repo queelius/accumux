@@ -1,0 +1,12 @@
+/home/spinoza/github/alpha/algebraic_reducers/build/CMakeFiles/test.dir
+/home/spinoza/github/alpha/algebraic_reducers/build/CMakeFiles/edit_cache.dir
+/home/spinoza/github/alpha/algebraic_reducers/build/CMakeFiles/rebuild_cache.dir
+/home/spinoza/github/alpha/algebraic_reducers/build/tests/CMakeFiles/test_kbn_sum.dir
+/home/spinoza/github/alpha/algebraic_reducers/build/tests/CMakeFiles/test_welford_accumulator.dir
+/home/spinoza/github/alpha/algebraic_reducers/build/tests/CMakeFiles/test_additional_coverage.dir
+/home/spinoza/github/alpha/algebraic_reducers/build/tests/CMakeFiles/test_expressions_basic.dir
+/home/spinoza/github/alpha/algebraic_reducers/build/tests/CMakeFiles/test_utility_coverage.dir
+/home/spinoza/github/alpha/algebraic_reducers/build/tests/CMakeFiles/test_modern_composition.dir
+/home/spinoza/github/alpha/algebraic_reducers/build/tests/CMakeFiles/test.dir
+/home/spinoza/github/alpha/algebraic_reducers/build/tests/CMakeFiles/edit_cache.dir
+/home/spinoza/github/alpha/algebraic_reducers/build/tests/CMakeFiles/rebuild_cache.dir

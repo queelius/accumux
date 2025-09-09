@@ -1,0 +1,5 @@
+if(EXISTS "/home/spinoza/github/alpha/algebraic_reducers/build/tests/test_expressions_simple[1]_tests.cmake")
+  include("/home/spinoza/github/alpha/algebraic_reducers/build/tests/test_expressions_simple[1]_tests.cmake")
+else()
+  add_test(test_expressions_simple_NOT_BUILT test_expressions_simple_NOT_BUILT)
+endif()

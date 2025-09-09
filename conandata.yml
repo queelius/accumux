@@ -1,0 +1,5 @@
+sources:
+  "1.0.0":
+    url: "https://github.com/your-username/accumux/archive/v1.0.0.tar.gz"
+    sha256: "replace_with_actual_sha256_when_release_is_created"
+    strip_root: 1

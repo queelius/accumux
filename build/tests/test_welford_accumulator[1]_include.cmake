@@ -1,0 +1,5 @@
+if(EXISTS "/home/spinoza/github/alpha/algebraic_reducers/build/tests/test_welford_accumulator[1]_tests.cmake")
+  include("/home/spinoza/github/alpha/algebraic_reducers/build/tests/test_welford_accumulator[1]_tests.cmake")
+else()
+  add_test(test_welford_accumulator_NOT_BUILT test_welford_accumulator_NOT_BUILT)
+endif()

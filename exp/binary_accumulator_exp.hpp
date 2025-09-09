@@ -14,14 +14,14 @@ namespace algebraic_accumulators
         B const & right;
     };
 
-    template <typename A, typename B>
-    auto left(binary_accumulator_exp<A,B> const & acc)
+    template <typename A, typename B, typename F>
+    auto left(binary_accumulator_exp<A,B,F> const & acc)
     {
         return acc.left;
     }
 
-    template <typename A, typename B>
-    auto right(binary_accumulator_exp<A,B> const & acc)
+    template <typename A, typename B, typename F>
+    auto right(binary_accumulator_exp<A,B,F> const & acc)
     {
         return acc.right;
     }
