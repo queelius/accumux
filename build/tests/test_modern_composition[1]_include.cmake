@@ -1,5 +1,0 @@
-if(EXISTS "/home/spinoza/github/alpha/algebraic_reducers/build/tests/test_modern_composition[1]_tests.cmake")
-  include("/home/spinoza/github/alpha/algebraic_reducers/build/tests/test_modern_composition[1]_tests.cmake")
-else()
-  add_test(test_modern_composition_NOT_BUILT test_modern_composition_NOT_BUILT)
-endif()

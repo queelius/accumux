@@ -1,5 +1,0 @@
-if(EXISTS "/home/spinoza/github/alpha/algebraic_reducers/build/tests/test_kbn_sum[1]_tests.cmake")
-  include("/home/spinoza/github/alpha/algebraic_reducers/build/tests/test_kbn_sum[1]_tests.cmake")
-else()
-  add_test(test_kbn_sum_NOT_BUILT test_kbn_sum_NOT_BUILT)
-endif()

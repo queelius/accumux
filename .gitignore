@@ -1,3 +1,8 @@
+# Build directories
+build/
+cmake-build-*/
+out/
+
 # Prerequisites
 *.d
 
@@ -30,3 +35,26 @@
 *.exe
 *.out
 *.app
+
+# Coverage files
+*.gcno
+*.gcda
+*.gcov
+coverage.info
+coverage/
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Package manager files
+.conan/
+conanbuildinfo.*
+conaninfo.txt
+
+# OS files
+.DS_Store
+Thumbs.db

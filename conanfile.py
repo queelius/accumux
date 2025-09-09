@@ -9,12 +9,12 @@ class AccumuxConan(ConanFile):
     version = "1.0.0"
     description = "Modern C++ library for compositional online data reductions"
     author = "Accumux Project Contributors"
-    url = "https://github.com/your-username/accumux"
+    url = "https://github.com/queelius/accumux"
     license = "MIT"
     topics = ("cpp", "statistics", "numerical", "data-processing", "accumulators")
     
     # Package metadata
-    homepage = "https://github.com/your-username/accumux"
+    homepage = "https://github.com/queelius/accumux"
     
     # Binary configuration
     settings = "os", "compiler", "build_type", "arch"

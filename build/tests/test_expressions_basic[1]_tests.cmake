@@ -1,7 +1,0 @@
-add_test([=[ExpressionsBasicTest.HeadersCompileSuccessfully]=]  /home/spinoza/github/alpha/algebraic_reducers/build/tests/test_expressions_basic [==[--gtest_filter=ExpressionsBasicTest.HeadersCompileSuccessfully]==] --gtest_also_run_disabled_tests)
-set_tests_properties([=[ExpressionsBasicTest.HeadersCompileSuccessfully]=]  PROPERTIES WORKING_DIRECTORY /home/spinoza/github/alpha/algebraic_reducers/build/tests SKIP_REGULAR_EXPRESSION [==[\[  SKIPPED \]]==])
-add_test([=[ExpressionsBasicTest.TypesCanBeInstantiated]=]  /home/spinoza/github/alpha/algebraic_reducers/build/tests/test_expressions_basic [==[--gtest_filter=ExpressionsBasicTest.TypesCanBeInstantiated]==] --gtest_also_run_disabled_tests)
-set_tests_properties([=[ExpressionsBasicTest.TypesCanBeInstantiated]=]  PROPERTIES WORKING_DIRECTORY /home/spinoza/github/alpha/algebraic_reducers/build/tests SKIP_REGULAR_EXPRESSION [==[\[  SKIPPED \]]==])
-add_test([=[ExpressionsBasicTest.ExpressionRelatedFunctionality]=]  /home/spinoza/github/alpha/algebraic_reducers/build/tests/test_expressions_basic [==[--gtest_filter=ExpressionsBasicTest.ExpressionRelatedFunctionality]==] --gtest_also_run_disabled_tests)
-set_tests_properties([=[ExpressionsBasicTest.ExpressionRelatedFunctionality]=]  PROPERTIES WORKING_DIRECTORY /home/spinoza/github/alpha/algebraic_reducers/build/tests SKIP_REGULAR_EXPRESSION [==[\[  SKIPPED \]]==])
-set(  test_expressions_basic_TESTS ExpressionsBasicTest.HeadersCompileSuccessfully ExpressionsBasicTest.TypesCanBeInstantiated ExpressionsBasicTest.ExpressionRelatedFunctionality)

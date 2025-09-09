@@ -2,7 +2,7 @@
 
 [![C++](https://img.shields.io/badge/C%2B%2B-20-blue.svg)](https://en.cppreference.com/w/cpp/20)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Build Status](https://img.shields.io/badge/build-passing-brightgreen.svg)](https://github.com/your-username/accumux)
+[![Build Status](https://img.shields.io/badge/build-passing-brightgreen.svg)](https://github.com/queelius/accumux)
 
 A modern C++ library for **compositional online data reductions** with mathematical rigor and exceptional performance.
 
@@ -250,7 +250,7 @@ We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.
 ### Development Setup
 
 ```bash
-git clone https://github.com/your-username/accumux.git
+git clone https://github.com/queelius/accumux.git
 cd accumux
 mkdir build && cd build
 cmake -DACCUMUX_BUILD_TESTS=ON ..
@@ -279,11 +279,11 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 🔗 Links
 
-- [Documentation](https://your-username.github.io/accumux)
-- [API Reference](https://your-username.github.io/accumux/api)  
+- [Documentation](https://queelius.github.io/accumux)
+- [API Reference](https://queelius.github.io/accumux/api)  
 - [Examples](examples/)
 - [Benchmarks](benchmarks/)
-- [Issue Tracker](https://github.com/your-username/accumux/issues)
+- [Issue Tracker](https://github.com/queelius/accumux/issues)
 
 ---
 
