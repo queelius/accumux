@@ -4,11 +4,10 @@
 #include <cmath>
 #include <limits>
 #include <random>
-#include "welford_accumulator.hpp"
-#include "kbn_sum.hpp"
+#include "include/accumux/accumulators/welford.hpp"
+#include "include/accumux/accumulators/kbn_sum.hpp"
 
-using namespace algebraic_accumulators;
-using namespace algebraic_accumulator;
+using namespace accumux;
 
 class WelfordAccumulatorTest : public ::testing::Test {
 protected:
@@ -60,9 +59,9 @@ protected:
 
 // Test default constructor
 TEST_F(WelfordAccumulatorTest, DefaultConstructor) {
-    welford_accumulator<kbn_sum<double>> acc;
+    welford_accumulator<double> acc;
     
-    EXPECT_EQ(acc.count, 0u);
+    EXPECT_EQ(acc.size(), 0u);
     EXPECT_EQ(acc.mean(), 0.0);
     EXPECT_EQ(acc.size(), 0u);
     EXPECT_EQ(acc.sum(), 0.0);
@@ -71,9 +70,9 @@ TEST_F(WelfordAccumulatorTest, DefaultConstructor) {
 
 // Test constructor with initial value
 TEST_F(WelfordAccumulatorTest, ValueConstructor) {
-    welford_accumulator<kbn_sum<double>> acc(5.0);
+    welford_accumulator<double> acc(5.0);
     
-    EXPECT_EQ(acc.count, 1u);
+    EXPECT_EQ(acc.size(), 1u);
     EXPECT_EQ(acc.mean(), 5.0);
     EXPECT_EQ(acc.size(), 1u);
     EXPECT_EQ(acc.sum(), 5.0);
@@ -83,37 +82,37 @@ TEST_F(WelfordAccumulatorTest, ValueConstructor) {
 
 // Test copy constructor
 TEST_F(WelfordAccumulatorTest, CopyConstructor) {
-    welford_accumulator<kbn_sum<double>> acc1(3.14);
-    welford_accumulator<kbn_sum<double>> acc2(acc1);
+    welford_accumulator<double> acc1(3.14);
+    welford_accumulator<double> acc2(acc1);
     
-    EXPECT_EQ(acc2.count, acc1.count);
+    EXPECT_EQ(acc2.size(), acc1.size());
     EXPECT_EQ(acc2.mean(), acc1.mean());
     EXPECT_EQ(acc2.variance(), acc1.variance());
 }
 
 // Test adding single values
 TEST_F(WelfordAccumulatorTest, AddingSingleValues) {
-    welford_accumulator<kbn_sum<double>> acc;
+    welford_accumulator<double> acc;
     
     acc += 1.0;
-    EXPECT_EQ(acc.count, 1u);
+    EXPECT_EQ(acc.size(), 1u);
     EXPECT_EQ(acc.mean(), 1.0);
     EXPECT_EQ(acc.sum(), 1.0);
     
     acc += 3.0;
-    EXPECT_EQ(acc.count, 2u);
+    EXPECT_EQ(acc.size(), 2u);
     EXPECT_EQ(acc.mean(), 2.0);
     EXPECT_EQ(acc.sum(), 4.0);
     
     acc += 5.0;
-    EXPECT_EQ(acc.count, 3u);
+    EXPECT_EQ(acc.size(), 3u);
     EXPECT_EQ(acc.mean(), 3.0);
     EXPECT_EQ(acc.sum(), 9.0);
 }
 
 // Test variance calculation
 TEST_F(WelfordAccumulatorTest, VarianceCalculation) {
-    welford_accumulator<kbn_sum<double>> acc;
+    welford_accumulator<double> acc;
     std::vector<double> values = {1.0, 2.0, 3.0, 4.0, 5.0};
     
     for (double val : values) {
@@ -131,7 +130,7 @@ TEST_F(WelfordAccumulatorTest, VarianceCalculation) {
 
 // Test with floating point values
 TEST_F(WelfordAccumulatorTest, FloatingPointValues) {
-    welford_accumulator<kbn_sum<double>> acc;
+    welford_accumulator<double> acc;
     std::vector<double> values = {1.1, 2.2, 3.3, 4.4, 5.5};
     
     for (double val : values) {
@@ -149,7 +148,7 @@ TEST_F(WelfordAccumulatorTest, FloatingPointValues) {
 
 // Test with negative values
 TEST_F(WelfordAccumulatorTest, NegativeValues) {
-    welford_accumulator<kbn_sum<double>> acc;
+    welford_accumulator<double> acc;
     std::vector<double> values = {-1.0, -2.0, -3.0, -4.0, -5.0};
     
     for (double val : values) {
@@ -166,7 +165,7 @@ TEST_F(WelfordAccumulatorTest, NegativeValues) {
 
 // Test with mixed positive and negative values
 TEST_F(WelfordAccumulatorTest, MixedSignValues) {
-    welford_accumulator<kbn_sum<double>> acc;
+    welford_accumulator<double> acc;
     std::vector<double> values = {-2.0, 1.0, -1.0, 2.0, 0.0};
     
     for (double val : values) {
@@ -183,7 +182,7 @@ TEST_F(WelfordAccumulatorTest, MixedSignValues) {
 
 // Test sample variance vs population variance
 TEST_F(WelfordAccumulatorTest, SampleVsPopulationVariance) {
-    welford_accumulator<kbn_sum<double>> acc;
+    welford_accumulator<double> acc;
     std::vector<double> values = {1.0, 2.0, 3.0, 4.0};
     
     for (double val : values) {
@@ -201,25 +200,22 @@ TEST_F(WelfordAccumulatorTest, SampleVsPopulationVariance) {
 
 // Test single value edge case for sample variance
 TEST_F(WelfordAccumulatorTest, SingleValueSampleVariance) {
-    welford_accumulator<kbn_sum<double>> acc;
+    welford_accumulator<double> acc;
     acc += 5.0;
     
     EXPECT_EQ(acc.variance(), 0.0);
     
-    // Sample variance with n=1 should divide by 0, which gives infinity or undefined behavior
-    // But mathematically it's undefined, so we expect infinity
+    // Sample variance with n=1 should return 0 in our implementation
     double sample_var = acc.sample_variance();
-    EXPECT_TRUE(std::isinf(sample_var) || std::isnan(sample_var));
+    EXPECT_EQ(sample_var, 0.0);
 }
 
 // Test empty accumulator edge cases
 TEST_F(WelfordAccumulatorTest, EmptyAccumulatorEdgeCases) {
-    welford_accumulator<kbn_sum<double>> acc;
+    welford_accumulator<double> acc;
     
-    // For empty accumulator with count=0:
-    // - variance calculation: M2/count = 0/0 = NaN
-    // - sample variance: M2/(count-1) = 0/(-1) = 0
-    EXPECT_TRUE(std::isnan(acc.variance()));
+    // For empty accumulator, all values should be 0
+    EXPECT_EQ(acc.variance(), 0.0);
     EXPECT_EQ(acc.sample_variance(), 0.0);
     EXPECT_EQ(acc.mean(), 0.0);
     EXPECT_EQ(acc.sum(), 0.0);
@@ -228,7 +224,7 @@ TEST_F(WelfordAccumulatorTest, EmptyAccumulatorEdgeCases) {
 
 // Test large numbers for numerical stability
 TEST_F(WelfordAccumulatorTest, LargeNumbers) {
-    welford_accumulator<kbn_sum<double>> acc;
+    welford_accumulator<double> acc;
     std::vector<double> values = {1e10, 1e10 + 1, 1e10 + 2, 1e10 + 3};
     
     for (double val : values) {
@@ -241,7 +237,7 @@ TEST_F(WelfordAccumulatorTest, LargeNumbers) {
 
 // Test many small values for precision
 TEST_F(WelfordAccumulatorTest, ManySmallValues) {
-    welford_accumulator<kbn_sum<double>> acc;
+    welford_accumulator<double> acc;
     std::vector<double> values(1000, 0.001);
     
     for (double val : values) {
@@ -254,9 +250,9 @@ TEST_F(WelfordAccumulatorTest, ManySmallValues) {
     EXPECT_EQ(acc.size(), 1000u);
 }
 
-// Test using kbn_welford_accumulate alias
-TEST_F(WelfordAccumulatorTest, KBNWelfordAlias) {
-    kbn_welford_accumulate<double> acc;
+// Test using make_welford_accumulator factory function
+TEST_F(WelfordAccumulatorTest, FactoryFunction) {
+    auto acc = make_welford_accumulator<double>();
     
     acc += 1.0;
     acc += 2.0;
@@ -267,39 +263,43 @@ TEST_F(WelfordAccumulatorTest, KBNWelfordAlias) {
     EXPECT_EQ(acc.sum(), 6.0);
 }
 
-// Test standalone function interfaces
-TEST_F(WelfordAccumulatorTest, StandaloneFunctions) {
-    welford_accumulator<kbn_sum<double>> acc;
+// Test iterator-based convenience functions
+TEST_F(WelfordAccumulatorTest, IteratorBasedFunctions) {
     std::vector<double> values = {1.0, 2.0, 3.0, 4.0, 5.0};
     
+    // Test the convenience functions for computing statistics from iterators
+    double computed_mean = mean(values.begin(), values.end());
+    double computed_variance = variance(values.begin(), values.end());
+    
+    welford_accumulator<double> acc;
     for (double val : values) {
         acc += val;
     }
     
-    EXPECT_EQ(mean(acc), acc.mean());
-    EXPECT_EQ(variance(acc), acc.variance());
-    EXPECT_EQ(sample_variance(acc), acc.sample_variance());
-    EXPECT_EQ(size(acc), acc.size());
-    EXPECT_EQ(sum(acc), acc.sum());
+    EXPECT_EQ(computed_mean, acc.mean());
+    EXPECT_EQ(computed_variance, acc.variance());
 }
 
-// Test with different underlying accumulator types
-TEST_F(WelfordAccumulatorTest, DifferentAccumulatorTypes) {
-    // Test with kbn_sum as accumulator (which is the intended use case)
-    welford_accumulator<kbn_sum<double>> kbn_acc;
+// Test standard deviation functions
+TEST_F(WelfordAccumulatorTest, StandardDeviation) {
+    welford_accumulator<double> acc;
     
-    kbn_acc += 1.0;
-    kbn_acc += 2.0;
-    kbn_acc += 3.0;
+    acc += 1.0;
+    acc += 2.0;
+    acc += 3.0;
     
-    EXPECT_EQ(kbn_acc.mean(), 2.0);
-    EXPECT_EQ(kbn_acc.sum(), 6.0);
-    EXPECT_EQ(kbn_acc.size(), 3u);
+    EXPECT_EQ(acc.mean(), 2.0);
+    EXPECT_EQ(acc.sum(), 6.0);
+    EXPECT_EQ(acc.size(), 3u);
+    
+    // Test that std_dev is square root of variance
+    EXPECT_DOUBLE_EQ(acc.std_dev(), std::sqrt(acc.variance()));
+    EXPECT_DOUBLE_EQ(acc.sample_std_dev(), std::sqrt(acc.sample_variance()));
 }
 
 // Test numerical precision compared to naive calculation
 TEST_F(WelfordAccumulatorTest, NumericalPrecision) {
-    welford_accumulator<kbn_sum<double>> acc;
+    welford_accumulator<double> acc;
     
     // Values designed to test numerical precision
     std::vector<double> values;
@@ -329,7 +329,7 @@ TEST_F(WelfordAccumulatorTest, RandomValuesStressTest) {
         val = dis(gen);
     }
     
-    welford_accumulator<kbn_sum<double>> acc;
+    welford_accumulator<double> acc;
     for (double val : random_values) {
         acc += val;
     }
@@ -346,7 +346,7 @@ TEST_F(WelfordAccumulatorTest, RandomValuesStressTest) {
 
 // Test incremental calculation property
 TEST_F(WelfordAccumulatorTest, IncrementalCalculation) {
-    welford_accumulator<kbn_sum<double>> acc;
+    welford_accumulator<double> acc;
     std::vector<double> values = {1.0, 4.0, 7.0, 2.0, 8.0};
     
     std::vector<double> means, variances;
@@ -371,7 +371,7 @@ TEST_F(WelfordAccumulatorTest, IncrementalCalculation) {
 
 // Test move semantics in delta2 calculation
 TEST_F(WelfordAccumulatorTest, MoveSemanticsInDelta2) {
-    welford_accumulator<kbn_sum<double>> acc;
+    welford_accumulator<double> acc;
     
     // Add values to test the move operation in delta2 calculation
     acc += 10.0;
@@ -384,7 +384,7 @@ TEST_F(WelfordAccumulatorTest, MoveSemanticsInDelta2) {
 
 // Test edge case with identical values
 TEST_F(WelfordAccumulatorTest, IdenticalValues) {
-    welford_accumulator<kbn_sum<double>> acc;
+    welford_accumulator<double> acc;
     
     for (int i = 0; i < 100; ++i) {
         acc += 42.0;

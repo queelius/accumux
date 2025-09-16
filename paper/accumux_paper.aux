@@ -1,0 +1,123 @@
+\relax 
+\providecommand\hyper@newdestlabel[2]{}
+\providecommand\HyField@AuxAddToFields[1]{}
+\providecommand\HyField@AuxAddToCoFields[2]{}
+\@writefile{toc}{\contentsline {section}{Abstract}{1}{section*.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {1}Introduction}{1}{section.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.1}Motivating Example}{1}{subsection.1.1}\protected@file@percent }
+\newlabel{lst:motivation}{{1}{1}{Composing multiple accumulators algebraically}{lstlisting.1}{}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {1}{\ignorespaces Composing multiple accumulators algebraically}}{1}{lstlisting.1}\protected@file@percent }
+\citation{borodin2005online}
+\citation{muthukrishnan2005data}
+\citation{alon1996space}
+\citation{cormode2005improved}
+\citation{vitter1985random}
+\citation{goldberg1991every}
+\citation{higham2002accuracy}
+\citation{kahan1965pracniques}
+\citation{neumaier1974rundungsfehleranalyse}
+\citation{welford1962note}
+\citation{chan1983algorithms}
+\citation{mcilroy1969mass}
+\citation{wadler1995monads}
+\citation{mcbride2008applicative}
+\citation{bird1997algebra}
+\citation{carbone2015apache}
+\citation{zaharia2013discretized}
+\citation{rhodes2021datasketches}
+\citation{veldhuizen1995expression}
+\citation{sutton2017concepts}
+\citation{guennebaud2010eigen}
+\citation{iglberger2012expression}
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.2}Contributions}{2}{subsection.1.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {2}Background and Related Work}{2}{section.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.1}Online Algorithms and Streaming Data}{2}{subsection.2.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.2}Numerical Stability in Floating-Point Computation}{2}{subsection.2.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.3}Compositional Programming Paradigms}{2}{subsection.2.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.4}Template Metaprogramming in C\nolinebreak  \hspace  {-.05em}\raisebox  {.4ex}{\tiny  \bf  +}\nolinebreak  \hspace  {-.10em}\raisebox  {.4ex}{\tiny  \bf  +}\xspace  }{2}{subsection.2.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {3}Mathematical Foundation and Design}{3}{section.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.1}Accumulators as Monoids}{3}{subsection.3.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2}Accumulator Homomorphisms}{3}{subsection.3.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.3}Composition Operators}{3}{subsection.3.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.3.1}Parallel Composition (\texttt  {operator+})}{3}{subsubsection.3.3.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.3.2}Sequential Composition (\texttt  {operator*})}{3}{subsubsection.3.3.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.4}Numerical Stability Analysis}{3}{subsection.3.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.4.1}Error Bounds for KBN Summation}{3}{subsubsection.3.4.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.4.2}Stability of Welford's Algorithm}{3}{subsubsection.3.4.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {4}Implementation Details}{4}{section.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.1}Type System Using C++20 Concepts}{4}{subsection.4.1}\protected@file@percent }
+\newlabel{lst:concept}{{2}{4}{Core accumulator concept definition}{lstlisting.2}{}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {2}{\ignorespaces Core accumulator concept definition}}{4}{lstlisting.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.2}Numerically Stable KBN Implementation}{4}{subsection.4.2}\protected@file@percent }
+\newlabel{lst:kbn}{{3}{4}{KBN summation core algorithm}{lstlisting.3}{}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {3}{\ignorespaces KBN summation core algorithm}}{4}{lstlisting.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.3}Zero-Overhead Parallel Composition}{4}{subsection.4.3}\protected@file@percent }
+\newlabel{lst:parallel}{{4}{4}{Parallel composition implementation}{lstlisting.4}{}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {4}{\ignorespaces Parallel composition implementation}}{4}{lstlisting.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.4}Compile-Time Optimizations}{4}{subsection.4.4}\protected@file@percent }
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {5}{\ignorespaces Variadic parallel composition using fold expressions}}{4}{lstlisting.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {5}Empirical Evaluation}{5}{section.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.1}Experimental Methodology}{5}{subsection.5.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.2}Numerical Accuracy Validation}{5}{subsection.5.2}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces Relative error in summation algorithms (pathological test case: alternating large/small values)}}{5}{table.caption.3}\protected@file@percent }
+\providecommand*\caption@xref[2]{\@setref\relax\@undefined{#1}}
+\newlabel{tab:accuracy}{{1}{5}{Relative error in summation algorithms (pathological test case: alternating large/small values)}{table.caption.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.3}Performance Analysis}{5}{subsection.5.3}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces Runtime performance for computing sum, variance, and min/max ($10^7$ double values)}}{5}{table.caption.5}\protected@file@percent }
+\newlabel{tab:performance}{{2}{5}{Runtime performance for computing sum, variance, and min/max ($10^7$ double values)}{table.caption.5}{}}
+\newlabel{lst:benchmark}{{6}{5}{Performance comparison setup}{lstlisting.6}{}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {6}{\ignorespaces Performance comparison setup}}{5}{lstlisting.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.4}Code Complexity Reduction}{5}{subsection.5.4}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces Code complexity metrics for equivalent functionality}}{5}{table.caption.6}\protected@file@percent }
+\newlabel{tab:complexity}{{3}{5}{Code complexity metrics for equivalent functionality}{table.caption.6}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.5}Composition Scalability}{5}{subsection.5.5}\protected@file@percent }
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {7}{\ignorespaces Scaling with multiple accumulators}}{6}{lstlisting.7}\protected@file@percent }
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {8}{\ignorespaces Scaling experiment with N accumulators}}{6}{lstlisting.8}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {6}Real-World Impact: Case Studies}{6}{section.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.1}High-Frequency Trading System}{6}{subsection.6.1}\protected@file@percent }
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {9}{\ignorespaces Financial analytics: VWAP and price statistics}}{6}{lstlisting.9}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.2}Industrial IoT Edge Computing}{6}{subsection.6.2}\protected@file@percent }
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {10}{\ignorespaces IoT edge computing with memory constraints}}{6}{lstlisting.10}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.3}Climate Simulation Stability}{6}{subsection.6.3}\protected@file@percent }
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {11}{\ignorespaces Climate simulation with energy conservation}}{6}{lstlisting.11}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {7}Discussion and Future Directions}{6}{section.7}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.1}Design Philosophy and Trade-offs}{6}{subsection.7.1}\protected@file@percent }
+\bibstyle{ACM-Reference-Format}
+\bibdata{references}
+\bibcite{borodin2005online}{{1}{}{{}}{{}}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.2}Current Limitations and Mitigations}{7}{subsection.7.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.3}Future Research Directions}{7}{subsection.7.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {8}Comparison with Existing Systems}{7}{section.8}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {4}{\ignorespaces Feature comparison with existing systems}}{7}{table.caption.9}\protected@file@percent }
+\newlabel{tab:comparison}{{4}{7}{Feature comparison with existing systems}{table.caption.9}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {9}Conclusion}{7}{section.9}\protected@file@percent }
+\bibcite{muthukrishnan2005data}{{2}{}{{}}{{}}}
+\bibcite{alon1996space}{{3}{}{{}}{{}}}
+\bibcite{cormode2005improved}{{4}{}{{}}{{}}}
+\bibcite{vitter1985random}{{5}{}{{}}{{}}}
+\bibcite{goldberg1991every}{{6}{}{{}}{{}}}
+\bibcite{higham2002accuracy}{{7}{}{{}}{{}}}
+\bibcite{kahan1965pracniques}{{8}{}{{}}{{}}}
+\bibcite{neumaier1974rundungsfehleranalyse}{{9}{}{{}}{{}}}
+\bibcite{welford1962note}{{10}{}{{}}{{}}}
+\bibcite{chan1983algorithms}{{11}{}{{}}{{}}}
+\bibcite{mcilroy1969mass}{{12}{}{{}}{{}}}
+\bibcite{wadler1995monads}{{13}{}{{}}{{}}}
+\bibcite{mcbride2008applicative}{{14}{}{{}}{{}}}
+\bibcite{bird1997algebra}{{15}{}{{}}{{}}}
+\bibcite{carbone2015apache}{{16}{}{{}}{{}}}
+\bibcite{zaharia2013discretized}{{17}{}{{}}{{}}}
+\bibcite{rhodes2021datasketches}{{18}{}{{}}{{}}}
+\bibcite{sutton2017concepts}{{19}{}{{}}{{}}}
+\bibcite{veldhuizen1995expression}{{20}{}{{}}{{}}}
+\bibcite{guennebaud2010eigen}{{21}{}{{}}{{}}}
+\bibcite{iglberger2012expression}{{22}{}{{}}{{}}}
+\newlabel{tocindent-1}{0pt}
+\newlabel{tocindent0}{0pt}
+\newlabel{tocindent1}{4.185pt}
+\newlabel{tocindent2}{10.34999pt}
+\newlabel{tocindent3}{18.198pt}
+\providecommand\NAT@force@numbers{}\NAT@force@numbers
+\@writefile{toc}{\contentsline {section}{References}{8}{section*.12}\protected@file@percent }
+\newlabel{TotPages}{{8}{8}{}{page.8}{}}
+\gdef \@abspage@last{8}

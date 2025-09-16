@@ -11,6 +11,7 @@
 #include <algorithm>
 #include <limits>
 #include <cstddef>
+#include <cmath>
 
 namespace accumux {
 

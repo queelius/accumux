@@ -1,22 +1,19 @@
 #include <gtest/gtest.h>
-#include "kbn_sum.hpp"
-#include "welford_accumulator.hpp"
-#include "exp/accumulator_exp.hpp"
-#include "exp/unary_accumulator_exp.hpp"
-#include "exp/binary_accumulator_exp.hpp"
+#include "include/accumux/accumulators/kbn_sum.hpp"
+#include "include/accumux/accumulators/welford.hpp"
+#include "include/accumux/core/composition.hpp"
 
-using namespace algebraic_accumulator;
-using namespace algebraic_accumulators;
+using namespace accumux;
 
-class ExpressionsBasicTest : public ::testing::Test {
+class CompositionBasicTest : public ::testing::Test {
 protected:
     void SetUp() override {}
     void TearDown() override {}
 };
 
-// Test that expression headers compile and basic operations work
-TEST_F(ExpressionsBasicTest, HeadersCompileSuccessfully) {
-    // If this test compiles and runs, it means the expression template 
+// Test that composition headers compile and basic operations work
+TEST_F(CompositionBasicTest, HeadersCompileSuccessfully) {
+    // If this test compiles and runs, it means the composition
     // headers are syntactically correct and can be included
     kbn_sum<double> sum1(10.0);
     kbn_sum<double> sum2(20.0);
@@ -26,25 +23,49 @@ TEST_F(ExpressionsBasicTest, HeadersCompileSuccessfully) {
     EXPECT_EQ(static_cast<double>(result), 30.0);
 }
 
-// Test that the types can be instantiated (even if not used)
-TEST_F(ExpressionsBasicTest, TypesCanBeInstantiated) {
-    // Test that these types exist and can be referenced
-    static_assert(std::is_class_v<accumulator_exp<kbn_sum<double>>>);
+// Test that basic accumulator types work
+TEST_F(CompositionBasicTest, BasicAccumulatorTypes) {
+    // Test that our basic types exist and work
+    kbn_sum<double> sum;
+    welford_accumulator<double> welford;
     
-    // Basic checks that the expression template files are included properly
-    EXPECT_TRUE(true);
+    // Add some values to each
+    sum += 1.0;
+    sum += 2.0;
+    sum += 3.0;
+    
+    welford += 1.0;
+    welford += 2.0;
+    welford += 3.0;
+    
+    // Check results
+    EXPECT_EQ(static_cast<double>(sum), 6.0);  // sum
+    EXPECT_EQ(welford.mean(), 2.0);  // mean
+    EXPECT_EQ(welford.size(), 3u);
 }
 
-// Test coverage for expression-related functionality that might exist
-TEST_F(ExpressionsBasicTest, ExpressionRelatedFunctionality) {
-    kbn_sum<double> acc1(5.0);
-    kbn_sum<double> acc2(3.0);
+// Test accumulator interoperability 
+TEST_F(CompositionBasicTest, AccumulatorInteroperability) {
+    // Test that accumulators can work together conceptually
+    kbn_sum<double> sum;
+    welford_accumulator<double> welford;
     
-    // Test binary operations
-    auto sum_result = acc1 + acc2;
-    EXPECT_EQ(static_cast<double>(sum_result), 8.0);
+    // Process the same data with both
+    std::vector<double> data = {1.0, 2.0, 3.0};
     
-    // Test that these operations preserve the KBN sum properties
-    EXPECT_GT(static_cast<double>(sum_result), 7.9);
-    EXPECT_LT(static_cast<double>(sum_result), 8.1);
+    for (auto value : data) {
+        sum += value;
+        welford += value; 
+    }
+    
+    EXPECT_EQ(static_cast<double>(sum), 6.0);
+    EXPECT_EQ(welford.mean(), 2.0);
+    EXPECT_EQ(welford.size(), 3u);
+    
+    // Test feeding one result into another
+    welford_accumulator<double> welford2;
+    welford2 += sum.eval();  // Feed sum result into welford
+    
+    EXPECT_EQ(welford2.mean(), 6.0);
+    EXPECT_EQ(welford2.size(), 1u);
 }

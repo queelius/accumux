@@ -2,11 +2,10 @@
 #include <vector>
 #include <cmath>
 #include <limits>
-#include "kbn_sum.hpp"
-#include "welford_accumulator.hpp"
+#include "include/accumux/accumulators/kbn_sum.hpp"
+#include "include/accumux/accumulators/welford.hpp"
 
-using namespace algebraic_accumulator;
-using namespace algebraic_accumulators;
+using namespace accumux;
 
 class UtilityCoverageTest : public ::testing::Test {
 protected:
@@ -17,36 +16,30 @@ protected:
 // Test the abs function for kbn_sum
 TEST_F(UtilityCoverageTest, KBNSumAbsFunction) {
     kbn_sum<double> positive(5.5);
-    positive.c = 0.5; // Add some correction term
+    // We can't directly modify correction anymore
     
     auto abs_result = abs(positive);
-    EXPECT_EQ(abs_result.s, 5.5);
-    EXPECT_EQ(abs_result.c, 0.5);
+    EXPECT_EQ(static_cast<double>(abs_result), 5.5);
     
     // Test with negative values
     kbn_sum<double> negative(-3.2);
-    negative.c = -0.8; // Negative correction
     
     auto abs_negative = abs(negative);
-    EXPECT_EQ(abs_negative.s, 3.2);  // std::abs(-3.2) = 3.2
-    EXPECT_EQ(abs_negative.c, 0.8);  // std::abs(-0.8) = 0.8
+    EXPECT_EQ(static_cast<double>(abs_negative), 3.2);
     
-    // Test with mixed signs
-    kbn_sum<double> mixed(-2.0);
-    mixed.c = 1.5; // Positive correction with negative sum
+    // Test with zero
+    kbn_sum<double> zero(0.0);
     
-    auto abs_mixed = abs(mixed);
-    EXPECT_EQ(abs_mixed.s, 2.0);
-    EXPECT_EQ(abs_mixed.c, 1.5);
+    auto abs_zero = abs(zero);
+    EXPECT_EQ(static_cast<double>(abs_zero), 0.0);
 }
 
 // Test float specialization branch coverage for KBN sum
 TEST_F(UtilityCoverageTest, KBNSumFloatBranchCoverage) {
     kbn_sum<float> sum(1.0f);
     
-    // Force the condition where abs(x) < abs(s) for float
-    sum.s = 10.0f;
-    sum.c = 0.0f;
+    // Test accumulation with float precision
+    sum = kbn_sum<float>(10.0f);
     sum += 1.0f; // abs(1.0f) < abs(10.0f), so should hit first branch
     
     EXPECT_GT(static_cast<float>(sum), 10.5f);
@@ -60,7 +53,7 @@ TEST_F(UtilityCoverageTest, KBNSumFloatBranchCoverage) {
 
 // Test uncovered Welford accumulator methods
 TEST_F(UtilityCoverageTest, WelfordUtilityFunctions) {
-    welford_accumulator<kbn_sum<double>> acc;
+    welford_accumulator<double> acc;
     
     // Add some data points
     std::vector<double> data = {1.0, 2.0, 3.0, 4.0, 5.0};
@@ -80,21 +73,21 @@ TEST_F(UtilityCoverageTest, WelfordUtilityFunctions) {
     double total = acc.sum();
     EXPECT_DOUBLE_EQ(total, 15.0);
     
-    // Test utility functions (global functions)
-    EXPECT_DOUBLE_EQ(mean(acc), 3.0);
-    EXPECT_DOUBLE_EQ(variance(acc), 2.0);
-    EXPECT_DOUBLE_EQ(sample_variance(acc), 2.5);
-    EXPECT_EQ(size(acc), 5u);
-    EXPECT_DOUBLE_EQ(sum(acc), 15.0);
+    // These are methods on the accumulator, not standalone functions
+    EXPECT_DOUBLE_EQ(acc.mean(), 3.0);
+    EXPECT_DOUBLE_EQ(acc.variance(), 2.0);
+    EXPECT_DOUBLE_EQ(acc.sample_variance(), 2.5);
+    EXPECT_EQ(acc.size(), 5u);
+    EXPECT_DOUBLE_EQ(acc.sum(), 15.0);
     
-    // Test conversion operator
+    // Test conversion operator (returns mean)
     double converted_value = static_cast<double>(acc);
-    EXPECT_DOUBLE_EQ(converted_value, 15.0);
+    EXPECT_DOUBLE_EQ(converted_value, 3.0);
 }
 
 // Test value constructor for Welford accumulator
 TEST_F(UtilityCoverageTest, WelfordValueConstructor) {
-    welford_accumulator<kbn_sum<double>> acc(10.0);
+    welford_accumulator<double> acc(10.0);
     
     EXPECT_EQ(acc.size(), 1u);
     EXPECT_DOUBLE_EQ(acc.mean(), 10.0);
@@ -110,30 +103,28 @@ TEST_F(UtilityCoverageTest, WelfordValueConstructor) {
 // Test KBN sum eval method
 TEST_F(UtilityCoverageTest, KBNSumEvalMethod) {
     kbn_sum<double> sum(5.0);
-    sum.c = 2.5;
     
-    EXPECT_DOUBLE_EQ(sum.eval(), 7.5);
+    EXPECT_DOUBLE_EQ(sum.eval(), 5.0);
     EXPECT_DOUBLE_EQ(static_cast<double>(sum), sum.eval());
 }
 
 // Test KBN sum comparison with scalar
 TEST_F(UtilityCoverageTest, KBNSumScalarComparison) {
     kbn_sum<double> sum(5.0);
-    sum.c = 0.5;
     
     EXPECT_TRUE(sum < 6.0);
     EXPECT_FALSE(sum < 5.0);
-    EXPECT_FALSE(sum < 5.5);
+    EXPECT_TRUE(sum < 5.5);
 }
 
 // Test KBN sum assignment operator
 TEST_F(UtilityCoverageTest, KBNSumValueAssignment) {
     kbn_sum<double> sum(10.0);
-    sum.c = 5.0; // This should be preserved by assignment
     
     sum = 3.0;
-    EXPECT_DOUBLE_EQ(sum.s, 3.0);
-    EXPECT_DOUBLE_EQ(static_cast<double>(sum), 8.0); // s=3.0 + c=5.0 = 8.0 (c is preserved)
+    EXPECT_DOUBLE_EQ(sum.sum_component(), 3.0);
+    EXPECT_DOUBLE_EQ(sum.correction_component(), 0.0);
+    EXPECT_DOUBLE_EQ(static_cast<double>(sum), 3.0);
 }
 
 // Test edge cases with very small and large numbers
@@ -154,7 +145,7 @@ TEST_F(UtilityCoverageTest, ExtremePrecisionCases) {
 
 // Test Welford accumulator with edge cases
 TEST_F(UtilityCoverageTest, WelfordEdgeCases) {
-    welford_accumulator<kbn_sum<double>> acc;
+    welford_accumulator<double> acc;
     
     // Single value case
     acc += 42.0;
@@ -168,17 +159,19 @@ TEST_F(UtilityCoverageTest, WelfordEdgeCases) {
     EXPECT_DOUBLE_EQ(acc.sample_variance(), 0.0);
 }
 
-// Test using KBN welford type alias
-TEST_F(UtilityCoverageTest, KBNWelfordTypeAlias) {
-    kbn_welford_accumulate<double> acc;
+// Test using factory function
+TEST_F(UtilityCoverageTest, FactoryFunctions) {
+    auto kbn_acc = make_kbn_sum<double>(10.0);
+    auto welford_acc = make_welford_accumulator<double>();
     
-    acc += 1.0;
-    acc += 2.0;
-    acc += 3.0;
+    welford_acc += 1.0;
+    welford_acc += 2.0;
+    welford_acc += 3.0;
     
-    EXPECT_EQ(acc.size(), 3u);
-    EXPECT_DOUBLE_EQ(acc.mean(), 2.0);
-    EXPECT_DOUBLE_EQ(acc.sum(), 6.0);
+    EXPECT_EQ(welford_acc.size(), 3u);
+    EXPECT_DOUBLE_EQ(welford_acc.mean(), 2.0);
+    EXPECT_DOUBLE_EQ(welford_acc.sum(), 6.0);
+    EXPECT_EQ(static_cast<double>(kbn_acc), 10.0);
 }
 
 // Test zero and negative operations more thoroughly

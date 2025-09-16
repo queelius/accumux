@@ -103,9 +103,11 @@ public:
     }
     
     /**
-     * @brief Conversion operator (returns eval())
+     * @brief Get results as tuple
      */
-    operator decltype(eval())() const {
+    using result_type = std::tuple<typename AccumA::value_type, typename AccumB::value_type>;
+
+    operator result_type() const {
         return eval();
     }
 };
