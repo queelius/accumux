@@ -17,10 +17,12 @@ TEST_F(CompositionBasicTest, HeadersCompileSuccessfully) {
     // headers are syntactically correct and can be included
     kbn_sum<double> sum1(10.0);
     kbn_sum<double> sum2(20.0);
-    
-    // Test the operator+ which should work
+
+    // operator+ creates a parallel_composition, not a sum
     auto result = sum1 + sum2;
-    EXPECT_EQ(static_cast<double>(result), 30.0);
+    auto [first, second] = result.eval();
+    EXPECT_EQ(first, 10.0);
+    EXPECT_EQ(second, 20.0);
 }
 
 // Test that basic accumulator types work

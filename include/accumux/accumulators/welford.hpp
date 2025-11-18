@@ -131,7 +131,7 @@ public:
     /**
      * @brief Conversion operator returns mean
      */
-    operator T() const {
+    explicit operator T() const {
         return mean();
     }
     

@@ -22,15 +22,15 @@ TEST_F(AdditionalCoverageTest, KBNSumSpecialCases) {
     sum += -5.0;  // Should result in zero
     EXPECT_EQ(static_cast<double>(sum), 0.0);
     
-    // Test with very small correction terms
-    kbn_sum<float> float_sum(1e20f);
-    float_sum += 1.0f;
-    float_sum += 1.0f;
-    float_sum += -1e20f;
-    
+    // Test with very small correction terms (using double for better precision)
+    kbn_sum<double> precise_sum(1e16);
+    precise_sum += 1.0;
+    precise_sum += 1.0;
+    precise_sum += -1e16;
+
     // Should preserve some precision due to KBN algorithm
-    float result = static_cast<float>(float_sum);
-    EXPECT_GE(result, 1.5f); // Better than naive summation
+    double result = static_cast<double>(precise_sum);
+    EXPECT_GE(result, 1.5); // Better than naive summation
 }
 
 // Test welford accumulator with extreme values

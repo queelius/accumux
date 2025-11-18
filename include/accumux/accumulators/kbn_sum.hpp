@@ -133,7 +133,7 @@ public:
     /**
      * @brief Conversion operator to value type
      */
-    operator T() const {
+    explicit operator T() const {
         return eval();
     }
     

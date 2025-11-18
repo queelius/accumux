@@ -145,8 +145,8 @@ TEST_F(CompositionTest, ParallelCompositionWithWelford) {
     const auto& minmax = comp.get_second();
 
     EXPECT_DOUBLE_EQ(welford.mean(), 3.0);
-    EXPECT_DOUBLE_EQ(welford.variance(), 2.5);  // Population variance
-    EXPECT_EQ(welford.count(), 5u);
+    EXPECT_DOUBLE_EQ(welford.sample_variance(), 2.5);  // Sample variance
+    EXPECT_EQ(welford.size(), 5u);
 
     EXPECT_DOUBLE_EQ(minmax.min(), 1.0);
     EXPECT_DOUBLE_EQ(minmax.max(), 5.0);
@@ -347,9 +347,10 @@ TEST_F(CompositionTest, MixedCompositionOperators) {
     comp2 += 1.0;
     comp2 += 5.0;
 
-    auto [min_max, count_sum] = comp2.eval();
-    EXPECT_EQ(count_sum.first, 2u);
-    EXPECT_DOUBLE_EQ(count_sum.second, 6.0);
+    // comp2 is count + sum
+    auto [count, sum] = comp2.eval();
+    EXPECT_EQ(count, 2u);
+    EXPECT_DOUBLE_EQ(sum, 6.0);
 }
 
 // ============================================================================

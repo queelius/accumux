@@ -24,24 +24,23 @@ namespace accumux {
  * 4. Can be combined with other accumulators
  */
 template<typename T>
-concept Accumulator = requires(T acc, typename T::value_type val) {
+concept Accumulator = requires(std::remove_cvref_t<T> acc, typename std::remove_cvref_t<T>::value_type val) {
     // Type requirements
-    typename T::value_type;
-    
+    typename std::remove_cvref_t<T>::value_type;
+
     // Construction requirements
-    { T{} } -> std::same_as<T>;                                    // Default constructible
-    { T{acc} } -> std::same_as<T>;                                 // Copy constructible
-    
+    { std::remove_cvref_t<T>{} } -> std::same_as<std::remove_cvref_t<T>>;                                    // Default constructible
+    { std::remove_cvref_t<T>{acc} } -> std::same_as<std::remove_cvref_t<T>>;                                 // Copy constructible
+
     // Core accumulation interface
-    { acc += val } -> std::same_as<T&>;                           // Accumulate value
-    { acc += acc } -> std::same_as<T&>;                           // Combine accumulators
-    
+    { acc += val } -> std::same_as<std::remove_cvref_t<T>&>;                           // Accumulate value
+    { acc += acc } -> std::same_as<std::remove_cvref_t<T>&>;                           // Combine accumulators
+
     // Result interface
-    { acc.eval() } -> std::convertible_to<typename T::value_type>; // Get result
-    { static_cast<typename T::value_type>(acc) };                 // Conversion operator
-    
+    { acc.eval() } -> std::convertible_to<typename std::remove_cvref_t<T>::value_type>; // Get result
+
     // Assignment support for composition
-    { acc = acc } -> std::same_as<T&>;                            // Copy assignment
+    { acc = acc } -> std::same_as<std::remove_cvref_t<T>&>;                            // Copy assignment
 };
 
 /**
@@ -51,9 +50,9 @@ concept Accumulator = requires(T acc, typename T::value_type val) {
  * extended interface for richer composition possibilities.
  */
 template<typename T>
-concept StatisticalAccumulator = Accumulator<T> && requires(T acc) {
+concept StatisticalAccumulator = Accumulator<T> && requires(std::remove_cvref_t<T> acc) {
     { acc.size() } -> std::convertible_to<std::size_t>;           // Number of samples
-    { acc.mean() } -> std::convertible_to<typename T::value_type>; // Sample mean
+    { acc.mean() } -> std::convertible_to<typename std::remove_cvref_t<T>::value_type>; // Sample mean
 };
 
 /**
@@ -62,9 +61,9 @@ concept StatisticalAccumulator = Accumulator<T> && requires(T acc) {
  * Accumulators that can compute variance statistics.
  */
 template<typename T>
-concept VarianceAccumulator = StatisticalAccumulator<T> && requires(T acc) {
-    { acc.variance() } -> std::convertible_to<typename T::value_type>;        // Population variance
-    { acc.sample_variance() } -> std::convertible_to<typename T::value_type>; // Sample variance
+concept VarianceAccumulator = StatisticalAccumulator<T> && requires(std::remove_cvref_t<T> acc) {
+    { acc.variance() } -> std::convertible_to<typename std::remove_cvref_t<T>::value_type>;        // Population variance
+    { acc.sample_variance() } -> std::convertible_to<typename std::remove_cvref_t<T>::value_type>; // Sample variance
 };
 
 /**

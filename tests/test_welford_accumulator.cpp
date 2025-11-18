@@ -396,3 +396,93 @@ TEST_F(WelfordAccumulatorTest, IdenticalValues) {
     EXPECT_EQ(acc.sample_variance(), 0.0);
     EXPECT_EQ(acc.size(), 100u);
 }
+
+// Test empty() method - basic behavior
+TEST_F(WelfordAccumulatorTest, EmptyMethod) {
+    welford_accumulator<double> acc;
+
+    // Should be empty initially
+    EXPECT_TRUE(acc.empty());
+    EXPECT_EQ(acc.size(), 0u);
+
+    // Should not be empty after adding a value
+    acc += 5.0;
+    EXPECT_FALSE(acc.empty());
+    EXPECT_EQ(acc.size(), 1u);
+
+    // Should still not be empty with more values
+    acc += 10.0;
+    acc += 15.0;
+    EXPECT_FALSE(acc.empty());
+    EXPECT_EQ(acc.size(), 3u);
+}
+
+// Test combining empty accumulators
+TEST_F(WelfordAccumulatorTest, CombineWithBothEmpty) {
+    welford_accumulator<double> acc1, acc2;
+
+    EXPECT_TRUE(acc1.empty());
+    EXPECT_TRUE(acc2.empty());
+
+    acc1 += acc2;
+
+    EXPECT_TRUE(acc1.empty());
+    EXPECT_EQ(acc1.size(), 0u);
+    EXPECT_EQ(acc1.mean(), 0.0);
+}
+
+// Test combining empty with non-empty accumulator
+TEST_F(WelfordAccumulatorTest, CombineEmptyWithNonEmpty) {
+    welford_accumulator<double> acc1, acc2;
+
+    // acc2 has data
+    acc2 += 5.0;
+    acc2 += 10.0;
+    acc2 += 15.0;
+
+    EXPECT_TRUE(acc1.empty());
+    EXPECT_FALSE(acc2.empty());
+
+    // Combine empty into non-empty
+    acc1 += acc2;
+
+    EXPECT_FALSE(acc1.empty());
+    EXPECT_EQ(acc1.size(), 3u);
+    EXPECT_EQ(acc1.mean(), acc2.mean());
+}
+
+// Test combining non-empty with empty accumulator
+TEST_F(WelfordAccumulatorTest, CombineNonEmptyWithEmpty) {
+    welford_accumulator<double> acc1, acc2;
+
+    // acc1 has data
+    acc1 += 5.0;
+    acc1 += 10.0;
+
+    EXPECT_FALSE(acc1.empty());
+    EXPECT_TRUE(acc2.empty());
+
+    double original_mean = acc1.mean();
+    std::size_t original_size = acc1.size();
+
+    // Combine non-empty with empty
+    acc1 += acc2;
+
+    EXPECT_FALSE(acc1.empty());
+    EXPECT_EQ(acc1.size(), original_size);
+    EXPECT_EQ(acc1.mean(), original_mean);
+}
+
+// Test empty accumulator statistics
+TEST_F(WelfordAccumulatorTest, EmptyAccumulatorStatistics) {
+    welford_accumulator<double> acc;
+
+    EXPECT_TRUE(acc.empty());
+    EXPECT_EQ(acc.size(), 0u);
+    EXPECT_EQ(acc.mean(), 0.0);
+    EXPECT_EQ(acc.sum(), 0.0);
+    EXPECT_EQ(acc.variance(), 0.0);
+    EXPECT_EQ(acc.sample_variance(), 0.0);
+    EXPECT_EQ(acc.std_dev(), 0.0);
+    EXPECT_EQ(acc.sample_std_dev(), 0.0);
+}

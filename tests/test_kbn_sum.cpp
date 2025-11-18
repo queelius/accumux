@@ -68,10 +68,10 @@ TEST_F(KBNSumTest, ValueAssignment) {
     EXPECT_EQ(sum.sum_component(), 7.5);
 }
 
-// Test conversion operator
+// Test explicit conversion operator
 TEST_F(KBNSumTest, ConversionOperator) {
     kbn_sum<double> sum(4.2);
-    double value = sum;
+    double value = static_cast<double>(sum);
     EXPECT_EQ(value, 4.2);
 }
 

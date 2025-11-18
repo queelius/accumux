@@ -35,27 +35,29 @@ namespace accumux {
 template<Accumulator AccumA, Accumulator AccumB>
 class parallel_composition {
 public:
-    using value_type = std::common_type_t<typename AccumA::value_type, typename AccumB::value_type>;
-    
+    // Result type is a tuple of both accumulator results
+    using value_type = std::tuple<typename AccumA::value_type, typename AccumB::value_type>;
+
 private:
     AccumA accumulator_a_;
     AccumB accumulator_b_;
-    
+
 public:
     /**
      * @brief Default constructor - initialize both accumulators
      */
     parallel_composition() = default;
-    
+
     /**
      * @brief Construct with initial accumulators
      */
     parallel_composition(AccumA a, AccumB b) : accumulator_a_(std::move(a)), accumulator_b_(std::move(b)) {}
-    
+
     /**
      * @brief Add a value to both accumulators
      */
-    parallel_composition& operator+=(const value_type& value) {
+    template<typename T>
+    parallel_composition& operator+=(const T& value) {
         accumulator_a_ += value;
         accumulator_b_ += value;
         return *this;
@@ -98,16 +100,14 @@ public:
     /**
      * @brief Evaluate the composition (returns tuple of results)
      */
-    auto eval() const {
+    value_type eval() const {
         return std::make_tuple(accumulator_a_.eval(), accumulator_b_.eval());
     }
-    
-    /**
-     * @brief Get results as tuple
-     */
-    using result_type = std::tuple<typename AccumA::value_type, typename AccumB::value_type>;
 
-    operator result_type() const {
+    /**
+     * @brief Explicit conversion to result tuple
+     */
+    explicit operator value_type() const {
         return eval();
     }
 };
@@ -150,12 +150,28 @@ public:
     }
     
     /**
+     * @brief Combine with another sequential composition
+     */
+    sequential_composition& operator+=(const sequential_composition& other) {
+        accumulator_a_ += other.accumulator_a_;
+        accumulator_b_ += other.accumulator_b_;
+        return *this;
+    }
+
+    /**
      * @brief Evaluate the final result
      */
-    auto eval() const {
+    value_type eval() const {
         return accumulator_b_.eval();
     }
-    
+
+    /**
+     * @brief Explicit conversion operator
+     */
+    explicit operator value_type() const {
+        return eval();
+    }
+
     /**
      * @brief Get intermediate result from first accumulator
      */
@@ -175,15 +191,22 @@ template<typename AccumA, typename AccumB, typename Predicate>
 class conditional_composition {
 public:
     using value_type = std::common_type_t<typename AccumA::value_type, typename AccumB::value_type>;
-    
+
 private:
     std::variant<AccumA, AccumB> active_accumulator_;
     Predicate predicate_;
-    
+
 public:
-    conditional_composition(AccumA a, AccumB b, Predicate pred) 
+    conditional_composition() = default;
+
+    conditional_composition(AccumA a, AccumB b, Predicate pred)
         : active_accumulator_(std::move(a)), predicate_(std::move(pred)) {}
-    
+
+    conditional_composition(const conditional_composition&) = default;
+    conditional_composition(conditional_composition&&) = default;
+    conditional_composition& operator=(const conditional_composition&) = default;
+    conditional_composition& operator=(conditional_composition&&) = default;
+
     template<typename T>
     conditional_composition& operator+=(T&& value) {
         // Switch accumulator if predicate changes
@@ -200,9 +223,29 @@ public:
         }
         return *this;
     }
-    
-    auto eval() const {
-        return std::visit([](const auto& acc) { return acc.eval(); }, active_accumulator_);
+
+    conditional_composition& operator+=(const conditional_composition& other) {
+        // Combine the active accumulators
+        std::visit([this](const auto& other_acc) {
+            std::visit([&other_acc](auto& this_acc) {
+                using ThisType = std::decay_t<decltype(this_acc)>;
+                using OtherType = std::decay_t<decltype(other_acc)>;
+                if constexpr (std::is_same_v<ThisType, OtherType>) {
+                    this_acc += other_acc;
+                }
+            }, this->active_accumulator_);
+        }, other.active_accumulator_);
+        return *this;
+    }
+
+    value_type eval() const {
+        return std::visit([](const auto& acc) -> value_type {
+            return static_cast<value_type>(acc.eval());
+        }, active_accumulator_);
+    }
+
+    explicit operator value_type() const {
+        return eval();
     }
 };
 

@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.20)
 
 project(accumux
-    VERSION 1.0.0
+    VERSION 1.2.0
     DESCRIPTION "Modern C++ library for compositional online data reductions"
     LANGUAGES CXX
 )

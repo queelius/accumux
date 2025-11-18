@@ -81,7 +81,7 @@ public:
     /**
      * @brief Conversion operator
      */
-    operator T() const {
+    explicit operator T() const {
         return eval();
     }
     
@@ -137,7 +137,7 @@ public:
         return has_value_ ? max_value_ : std::numeric_limits<T>::lowest();
     }
     
-    operator T() const {
+    explicit operator T() const {
         return eval();
     }
     
@@ -182,7 +182,7 @@ public:
         return count_;
     }
     
-    operator std::size_t() const {
+    explicit operator std::size_t() const {
         return count_;
     }
     
@@ -248,7 +248,7 @@ public:
         return std::exp(log_product_);
     }
     
-    operator T() const {
+    explicit operator T() const {
         return eval();
     }
     
@@ -318,7 +318,7 @@ public:
                           std::make_pair(std::numeric_limits<T>::max(), std::numeric_limits<T>::lowest());
     }
     
-    operator std::pair<T, T>() const {
+    explicit operator std::pair<T, T>() const {
         return eval();
     }
     
