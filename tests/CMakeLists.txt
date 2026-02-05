@@ -20,3 +20,9 @@ add_accumux_test(test_composition)
 add_accumux_test(test_composition_simple)
 add_accumux_test(test_expressions_basic)
 add_accumux_test(test_additional_coverage)
+
+# New v2.0 tests
+add_accumux_test(test_extended_accumulators)
+add_accumux_test(test_variadic_composition)
+add_accumux_test(test_distributed)
+add_accumux_test(test_algebra)
